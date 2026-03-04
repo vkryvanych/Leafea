@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alata&family=Alice&display=swap');
+
+:root {
+    --text-blue: #252F6B;
+    --block-blue: #182286; 
+    --back-blue: #252F6B;
+    --background: #030212;
+    --purple: #B752C5;
+    --star-yellow: #987E28; 
+    --gray: #6F5F73;
+} 
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background);
+    color: white;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
