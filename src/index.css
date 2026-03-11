@@ -9,6 +9,7 @@
     --purple: #B752C5;
     --star-yellow: #987E28; 
     --gray: #6F5F73;
+    --footer: #030224;
 } 
 
 * {
@@ -33,4 +34,5 @@ body, html {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
