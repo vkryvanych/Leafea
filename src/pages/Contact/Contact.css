@@ -1,0 +1,60 @@
+.contact-page {
+    min-height: 100vh;
+    background-color: var(--background, #030212);
+    color: white;
+    padding: 150px 5% 100px 5%;
+    display: flex;
+    justify-content: center;
+}
+
+.contact-container {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+}
+
+.contact-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contact-title {
+    font-family: 'Alice', serif;
+    font-size: 6.5rem;
+    line-height: 0.9;
+    font-weight: 400;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.contact-decorative-shape {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50% 50% 0 50%;
+    top: 20%;
+    right: 10%;
+    opacity: 0.5;
+}
+
+.contact-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    .contact-title {
+        font-size: 4rem;
+    }
+}

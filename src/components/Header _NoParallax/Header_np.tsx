@@ -1,6 +1,5 @@
-import './Header.css';
+import './Header_np.css';
 import logo from '../../assets/logo.png';
-import { Link } from 'react-router-dom';
 
 function Header() {
     return (
@@ -8,21 +7,21 @@ function Header() {
             <div className="navbar-container">
                 
                 <div className="logo-section">
-                    <Link to="/">
+                    <a href="/">
                         <div className="logo-circle">
                             <img src={logo} alt="Leafea" className="logo-icon" />
                         </div>
-                    </Link>
+                    </a>
                 </div>
 
                 <nav className="nav-menu">
-                    <Link to="/#about" className="nav-link">Про нас</Link>
-                    <Link to="/contact" className="nav-link">Контакти</Link>
+                    <a href="#about" className="nav-link">Про нас</a>
+                    <a href="#contacts" className="nav-link">Контакти</a>
                 </nav>
 
-                <div className="auth-section"> 
-                    <Link to="/auth/register" className="nav-link">Реєстрація</Link>
-                    <Link to="/auth/login" className="btn-login">Вхід</Link>
+                <div className="auth-section">
+                    <a href="#" className="nav-link">Реєстрація</a>
+                    <a href="#" className="btn-login">Вхід</a>
                 </div>
                 
             </div>

@@ -1,5 +1,6 @@
 import './Footer.css';
 import logo from '../../assets/logo.png'; 
+import { Link } from 'react-router-dom';
 
 function Footer() {
     return (
@@ -7,11 +8,11 @@ function Footer() {
             <div className="footer-main">
                 <div className="footer-container">
                     <div className="footer-logo-wrapper">
-                        <a href="/">
+                        <Link to="/">
                             <div className="footer-logo-circle">
                                 <img src={logo} alt="Leafea Logo" className="footer-logo-icon" />
                             </div>
-                        </a>
+                        </Link>
                     </div>
                     <div className="footer-description">
                         <p>
@@ -22,10 +23,10 @@ function Footer() {
                     </div>
                     <nav className="footer-nav">
                         <ul className="footer-links">
-                            <li><a href="#about">Про нас</a></li>
-                            <li><a href="#cabinet">Особистий кабінет</a></li>
-                            <li><a href="#auth">Вхід / Реєстрація</a></li>
-                            <li><a href="#contacts">Контакти</a></li>
+                            <li><Link to="/#about">Про нас</Link></li>
+                            <li><Link to="/cabinet">Особистий кабінет</Link></li>
+                            <li><Link to="/auth/register">Вхід / Реєстрація</Link></li>
+                            <li><Link to="/contact">Контакти</Link></li>
                         </ul>
                     </nav>
 

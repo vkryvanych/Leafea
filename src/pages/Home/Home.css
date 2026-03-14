@@ -1,7 +1,7 @@
 .example {
-    position: relative; /* Щоб працював z-index */
-    z-index: 10;        /* Більше ніж у гір (які мають максимум 5) */
-    background-color: #030212; /* Твій колір фону, щоб перекрити гори */
-    margin-top: -2px;   /* Щільне прилягання */
+    position: relative; 
+    z-index: 10;       
+    background-color: #030212; 
+    margin-top: -2px;  
     padding: 80px 20px;
 }
