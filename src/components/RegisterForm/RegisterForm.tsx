@@ -21,7 +21,7 @@ function RegisterForm() {
 
                 <div className="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="Введіть ваш email" />
+                    <input type="email" placeholder="Введіть ваш емайл" />
                 </div>
 
                 <div className="input-group">

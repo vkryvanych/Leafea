@@ -1,11 +1,11 @@
 import './AboutSection.css';
-
+import butterfly_1 from '../../assets/butterfly_1.png';
+import lillies from '../../assets/lillies.png';
 
 function AboutSection() {
     return (
         <section id="about" className="about-section">
             
-          
             <div className="about-content">
                 <h2 className="about-title">
                     <span className="underline-text">Про</span> 
@@ -22,6 +22,8 @@ function AboutSection() {
                 </div>
             </div>
             <div className="about-visuals">
+                <img src={butterfly_1} alt="Butterfly" className="visual-butterfly" />
+                <img src={lillies} alt="Glowing Lillies" className="visual-lillies" />
             </div>
 
         </section>

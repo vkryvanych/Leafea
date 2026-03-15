@@ -1,9 +1,9 @@
 .auth-page-wrapper {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 100px 5% 200px 5%;
+    padding: 87px 5% 200px 5%;
     box-sizing: border-box;
     background-color: #030212;    
     background-image: 

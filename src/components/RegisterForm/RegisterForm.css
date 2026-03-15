@@ -11,7 +11,7 @@
 }
 
 .auth-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--gray, #6F5F73);
     margin-bottom: 40px;
 }
@@ -47,7 +47,7 @@
 }
 
 .input-group label {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.7);
 }
 

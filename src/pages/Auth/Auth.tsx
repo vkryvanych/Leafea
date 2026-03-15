@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './Auth.css';
-import authImage from '../../assets/card_1.jpg'; 
+import authImage from '../../assets/angel_auth.jpg'; 
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
 import LoginForm from '../../components/LoginForm/LoginForm';
 
