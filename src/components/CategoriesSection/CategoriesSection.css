@@ -28,13 +28,37 @@
     flex-wrap: wrap; 
 }
 
+
 @media (max-width: 900px) {
+    .categories-section {
+        padding: 60px 0 60px 5%; 
+        min-height: auto;
+    }
+
     .categories-title {
         font-size: 2.5rem;
         text-align: center;
+        padding-right: 5%;
     }
+
     .categories-grid {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto; 
         gap: 20px;
+        padding-right: 5%; 
+        padding-bottom: 20px; 
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
-    
+
+    .categories-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .categories-grid > * {
+        flex: 0 0 75vw; 
+        max-width: 300px;
+        scroll-snap-align: center;
+    }
 }

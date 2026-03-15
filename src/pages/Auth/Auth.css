@@ -66,10 +66,17 @@
     color: white;
 }
 
-
 @media (max-width: 800px) {
+    .auth-page-wrapper {
+        padding: 120px 5% 100px 5%; 
+        background-image: 
+            radial-gradient(circle at top right, rgba(130, 70, 255, 0.2) 0%, transparent 300px),
+            radial-gradient(circle at bottom left, rgba(0, 120, 255, 0.2) 0%, transparent 300px);
+    }
+
     .auth-container {
         flex-direction: column;
+        height: auto; 
     }
 
     .auth-image-box {
@@ -77,6 +84,6 @@
     }
 
     .auth-form-box {
-        padding: 40px 20px;
+        padding: 30px 20px;
     }
 }

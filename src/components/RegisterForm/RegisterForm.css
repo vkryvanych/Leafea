@@ -85,3 +85,41 @@
 .auth-submit-btn:hover {
     background-color: #3b4580;
 }
+
+
+@media (max-width: 800px) {
+    .auth-form-content {
+        height: 450px; 
+        padding-bottom: 10px; 
+    }
+
+    .auth-title {
+        font-size: 2rem; 
+        line-height: 1.1;
+        margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+        font-size: 1rem;
+        margin-bottom: 25px; 
+    }
+
+    .auth-form {
+        gap: 15px;
+    }
+
+    .input-group label {
+        font-size: 1rem;
+    }
+
+    .input-group input {
+        padding: 12px; 
+        font-size: 0.95rem;
+    }
+
+    .auth-submit-btn {
+        margin-top: 10px; 
+        padding: 12px; 
+        font-size: 1rem;
+    }
+}

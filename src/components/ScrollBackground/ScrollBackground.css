@@ -97,3 +97,26 @@
   transform: scale(1.02);
   background-color: #ffffff;
 }
+
+
+@media (max-width: 768px) {
+    .hero-content-overlay {
+        padding: 0 20px;
+        text-align: center;
+        margin-top: -14vh; 
+    }
+
+    .leaf-text {
+        font-size: 4.3rem; 
+    }
+
+    .sub-text {
+        font-size: 1.4rem; 
+        margin-bottom: 30px;
+    }
+
+    .start-btn {
+        padding: 12px 35px; 
+        font-size: 1.1rem;
+    }
+}

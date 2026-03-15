@@ -1,9 +1,9 @@
+import { useEffect, useRef } from 'react';
 import CategoryCard from '../CategoryCard/CategoryCard';
 import './CategoriesSection.css';
-import card_1 from '../../assets/card_1.jpg'
-import card_2 from '../../assets/card_2.jpg'
-import card_3 from '../../assets/card_3.jpg'
- 
+import card_1 from '../../assets/card_1.jpg';
+import card_2 from '../../assets/card_2.jpg';
+import card_3 from '../../assets/card_3.jpg';
 
 const categoriesData = [
     { 
@@ -14,7 +14,7 @@ const categoriesData = [
     { 
         id: 2, 
         title: 'Аніме', 
-        image:  card_2
+        image: card_2
     },
     { 
         id: 3, 
@@ -24,6 +24,51 @@ const categoriesData = [
 ];
 
 function CategoriesSection() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const autoSwipeStopped = useRef(false);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container || !container.firstChild) return;
+
+        let index = 0;
+
+        const stopAutoSwipe = () => {
+            autoSwipeStopped.current = true;
+            clearInterval(intervalId);
+        };
+
+        // Зупиняємо свайп, коли користувач сам торкається екрана або скролить
+        container.addEventListener("touchstart", stopAutoSwipe, { once: true });
+        container.addEventListener("mousedown", stopAutoSwipe, { once: true });
+        container.addEventListener("wheel", stopAutoSwipe, { once: true });
+
+        const intervalId = setInterval(() => {
+            if (autoSwipeStopped.current) return;
+
+            // Якщо ми на десктопі (немає горизонтального скролу), скасовуємо анімацію
+            if (container.scrollWidth <= container.clientWidth) return;
+
+            const gap = 20; // Це gap з твого CSS для мобільної версії
+            const cardWidth = (container.firstChild as HTMLElement).offsetWidth + gap;
+
+            index++;
+            if (index >= categoriesData.length) index = 0;
+
+            container.scrollTo({
+                left: cardWidth * index,
+                behavior: "smooth",
+            });
+        }, 3500);
+
+        return () => {
+            clearInterval(intervalId);
+            container.removeEventListener("touchstart", stopAutoSwipe);
+            container.removeEventListener("mousedown", stopAutoSwipe);
+            container.removeEventListener("wheel", stopAutoSwipe);
+        };
+    }, []);
+
     return (
         <section className="categories-section">
             <h2 className="categories-title">
@@ -31,7 +76,7 @@ function CategoriesSection() {
                 <span className="highlight-text">Leafea</span>?
             </h2>
             
-            <div className="categories-grid">
+            <div className="categories-grid" ref={containerRef}>
                 {categoriesData.map((category) => (
                     <CategoryCard 
                         key={category.id} 

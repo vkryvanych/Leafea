@@ -77,3 +77,79 @@
   background: white;
   color: #030212;
 }
+
+.mobile-auth-section {
+  display: none; 
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001; 
+}
+
+.burger span {
+  height: 3px;
+  width: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Анімація перетворення на хрестик */
+.burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+
+@media (max-width: 850px) {
+  .desktop-auth-section {
+    display: none; 
+  }
+  
+  .burger {
+    display: flex; 
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: none;
+    width: 100%;
+    background: #030224; 
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .nav-menu.open {
+    max-height: 400px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+  }
+
+  .nav-link {
+    display: block;
+    padding: 15px 0;
+    font-size: 1.2rem;
+  }
+
+  .mobile-auth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+  }
+}
