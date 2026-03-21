@@ -1,0 +1,92 @@
+.cabinet-page {
+    min-height: 100vh;
+    background-color: #030212; 
+    background-image: 
+        radial-gradient(circle at 80% 0%, rgba(130, 70, 255, 0.35) 0%, transparent 600px),
+        radial-gradient(circle at 100% 100%, rgba(11, 47, 145, 0.4) 0%, transparent 700px),
+        radial-gradient(circle at 0% 50%, rgba(201, 85, 212, 0.25) 0%, transparent 600px);
+    color: white;
+    padding: 30px 5% 50px 5%; 
+    position: relative; 
+    overflow-x: hidden; 
+}
+
+
+.cabinet-content {
+    position: relative;
+    z-index: 10;
+}
+
+
+.cabinet-bg-flower {
+    position: absolute;
+    bottom: -50px; 
+    right: -50px;  
+    width: 400px;  
+    z-index: 0;
+    pointer-events: none; 
+    opacity: 0.8; 
+    filter: drop-shadow(0 0 20px rgba(11, 47, 145, 0.5)); 
+}
+
+.cabinet-bg-butterfly {
+    position: absolute;
+    top: 50px; 
+    right: 5%; 
+    width: 150px; 
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 15px rgba(130, 70, 255, 0.5)); 
+    animation: float-bg 6s ease-in-out infinite; 
+}
+
+
+.cabinet-loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #030212;
+    color: #8246FF;
+    font-size: 1.5rem;
+    font-family: 'Alice', serif;
+}
+
+
+.recent-items-section {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.recent-title {
+    font-family: 'Alice', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.star-icon {
+    width: 60px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(77, 16, 110, 0.6)); 
+}
+
+.saved-items-list {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+}
+
+
+.placeholder-tab {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.5);
+}

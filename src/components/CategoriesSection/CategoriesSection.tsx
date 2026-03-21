@@ -38,18 +38,16 @@ function CategoriesSection() {
             clearInterval(intervalId);
         };
 
-        // Зупиняємо свайп, коли користувач сам торкається екрана або скролить
+    
         container.addEventListener("touchstart", stopAutoSwipe, { once: true });
         container.addEventListener("mousedown", stopAutoSwipe, { once: true });
         container.addEventListener("wheel", stopAutoSwipe, { once: true });
 
         const intervalId = setInterval(() => {
             if (autoSwipeStopped.current) return;
-
-            // Якщо ми на десктопі (немає горизонтального скролу), скасовуємо анімацію
             if (container.scrollWidth <= container.clientWidth) return;
 
-            const gap = 20; // Це gap з твого CSS для мобільної версії
+            const gap = 20; 
             const cardWidth = (container.firstChild as HTMLElement).offsetWidth + gap;
 
             index++;

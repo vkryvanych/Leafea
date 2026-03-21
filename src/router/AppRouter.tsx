@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import Auth from "../pages/Auth/Auth";
 import Contact from "../pages/Contact/Contact";
 import ScrollToTop from "../components/ScrollToTop/ScrollToTop"; 
+import Cabinet from "../pages/Cabinet/Cabinet";
 
 function AppRouter() {
   return (
@@ -16,6 +17,7 @@ function AppRouter() {
           <Route path="home" element={<Home />} />
           <Route path="auth/*" element={<Auth />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="cabinet" element={<Cabinet />} />
         </Route>
       </Routes>
 

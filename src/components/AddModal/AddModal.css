@@ -1,0 +1,136 @@
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(3, 2, 18, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #111026; 
+    border: 1px solid rgba(130, 70, 255, 0.3); 
+    border-radius: 12px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); 
+    padding: 30px 40px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    color: white;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover { color: white; }
+
+.modal-title {
+    font-family: 'Alice', serif;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-family: 'Alata', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-group input, .form-group textarea {
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1rem;
+    border-radius: 8px; 
+    padding: 12px 15px;
+    color: white; font-family: 'Alata', sans-serif;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none; 
+    border-color: #c955d4;
+    background: rgba(255, 255, 255, 0.08); 
+}
+
+
+.category-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cat-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Alice', serif;
+    font-size: 1rem;
+}
+
+.cat-btn.active {
+    background: #c955d4;
+    border-color: #c955d4;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Alice', serif;
+    font-size: 1.1rem;
+}
+
+.btn-submit {
+    background: #c955d4;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-family: 'Alice', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-submit:hover { background: #e06cf0; }

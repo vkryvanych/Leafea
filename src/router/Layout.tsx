@@ -5,10 +5,11 @@ import Header from "../components/Header/Header";
 function Layout() {
     const location = useLocation();
     const isHomePage = location.pathname === "/" || location.pathname === "/home";
+    const isCabinetPage = location.pathname.includes("/cabinet");
 
     return (
         <>
-            {!isHomePage && <Header />}
+            {!isHomePage && !isCabinetPage && <Header />} 
           
             <main>
                 <Outlet /> 
