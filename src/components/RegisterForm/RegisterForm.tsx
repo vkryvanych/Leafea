@@ -1,7 +1,16 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import type { SyntheticEvent } from 'react';
 import './RegisterForm.css';    
 
 function RegisterForm() {
+    const { register } = useAuth();
+
+    const handleRegister = (e: SyntheticEvent) => {
+        e.preventDefault();
+        register(); 
+    };
+
     return (
         <div className="auth-form-content">
             <h2 className="auth-title">Створити акаунт</h2>
@@ -13,23 +22,23 @@ function RegisterForm() {
                 </Link>
             </p>
 
-            <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="auth-form" onSubmit={handleRegister}>
                 <div className="input-group">
                     <label>Ім'я</label>
-                    <input type="text" placeholder="Введіть ваше ім'я" />
+                    <input type="text" placeholder="Введіть ваше ім'я" required />
                 </div>
 
                 <div className="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="Введіть ваш емайл" />
+                    <input type="email" placeholder="Введіть ваш емайл" required />
                 </div>
 
                 <div className="input-group">
                     <label>Пароль</label>
-                    <input type="password" placeholder="Введіть пароль" />
+                    <input type="password" placeholder="Введіть пароль" required />
                 </div>
 
-                <button className="auth-submit-btn">Створити акаунт</button>
+                <button type="submit" className="auth-submit-btn">Створити акаунт</button>
             </form>
         </div>
     );

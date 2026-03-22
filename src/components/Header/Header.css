@@ -78,6 +78,22 @@
   color: #030212;
 }
 
+.btn-cabinet {
+  color: white;
+  text-decoration: none;
+  padding: 8px 20px;
+  border: 1px solid white;
+  border-radius: 20px;
+  transition: background 0.3s, color 0.3s;
+  transform: translateY(-3px);
+}
+
+.btn-cabinet:hover {
+  background: white;
+  color: #030212;
+}
+
+
 .mobile-auth-section {
   display: none; 
 }

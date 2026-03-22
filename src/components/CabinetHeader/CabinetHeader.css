@@ -9,13 +9,11 @@
     position: relative;
 }
 
-
 .cabinet-logo-container {
     position: relative;
     display: flex;
     align-items: center;
 }
-
 
 .cabinet-add-btn {
     position: absolute;
@@ -40,7 +38,6 @@
     transform: scale(1.1);
     background-color: #e06cf0;
 }
-
 
 .cabinet-dropdown {
     position: absolute;
@@ -100,12 +97,14 @@
     padding-bottom: 5px;
 }
 
-
 .cabinet-user-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
+    position: relative; 
+    cursor: pointer;   
+    transition: transform 0.2s;
 }
 
 .cabinet-avatar {
@@ -119,4 +118,70 @@
 .cabinet-username {
     font-size: 1rem;
     font-family: 'Alice', serif;
+}
+
+.profile-dropdown {
+    left: auto;
+    right: 0;
+    top: 110%; 
+}
+
+.logout-btn:hover {
+    background-color: rgba(255, 70, 70, 0.2) !important;
+    color: #ff6b6b;
+}
+
+.cabinet-avatar:hover {
+    box-shadow: 0 0 10px rgba(103, 62, 199, 0.6);
+    transition: transform 0.5s, background-color 0.2s;
+}
+
+.avatar-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 5px;
+}
+
+.avatar-selection-title {
+    margin: 0;
+    font-family: 'Alice', serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+}
+
+.avatar-grid {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.avatar-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.avatar-option:hover {
+    transform: scale(1.1);
+    border-color: #c955d4;
+    box-shadow: 0 0 10px rgba(201, 85, 212, 0.5);
+}
+
+.cabinet-dropdown button.back-btn {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.cabinet-dropdown button.back-btn:hover {
+    background-color: transparent;
+    color: white;
 }
