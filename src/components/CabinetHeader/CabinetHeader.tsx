@@ -1,7 +1,19 @@
 import { useState, useRef, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../../hooks/useAuth'; 
-import card_1 from '../../assets/card_1.jpg'; 
+import girl1_ava from '../../assets/girl1_ava.jpg';
+import girl2_ava from '../../assets/girl2_ava.jpg';
+import girl3_ava from '../../assets/girl3_ava.jpg';
+import girl4_ava from '../../assets/girl4_ava.jpg';
+import angel_ava from '../../assets/angel_ava.jpg';
+import cat1_ava from '../../assets/cat1_ava.jpg';
+import cat2_ava from '../../assets/cat2_ava.jpg';
+import butterfly_ava from '../../assets/butterfly_ava.jpg';
+import asa_ava from '../../assets/asa_ava.jpg';
+import angel2_ava from '../../assets/angel2_ava.jpg';
+import man_ava from '../../assets/man_ava.jpg';
+import rise_ava from '../../assets/rise_ava.jpg';
+
 import './CabinetHeader.css';
 
 interface CabinetHeaderProps {
@@ -16,7 +28,11 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
     const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isChoosingAvatar, setIsChoosingAvatar] = useState(false); 
-    const [currentAvatar, setCurrentAvatar] = useState(card_1);
+    
+   
+    const [currentAvatar, setCurrentAvatar] = useState(() => {
+        return localStorage.getItem('userAvatar') || userData.avatar;
+    });
 
     const navigate = useNavigate(); 
     const { logout } = useAuth(); 
@@ -24,9 +40,9 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
     const menuRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null); 
     
-    
     const predefinedAvatars = [
-        card_1
+        girl2_ava, girl1_ava, cat1_ava, angel_ava, girl4_ava, butterfly_ava,
+        girl3_ava, asa_ava, angel2_ava, man_ava, rise_ava, cat2_ava
     ];
 
     useEffect(() => {
@@ -59,6 +75,8 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
 
     const handleAvatarSelect = (ava: string) => {
         setCurrentAvatar(ava);
+        localStorage.setItem('userAvatar', ava);
+        
         setIsChoosingAvatar(false);
         setIsProfileMenuOpen(false);
     };
@@ -90,28 +108,29 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                 <button className={`nav-item ${activeTab === 'quotes' ? 'active' : ''}`} onClick={() => setActiveTab('quotes')}>Цитати</button>
             </nav>
 
-           
             <div 
                 className="cabinet-user-profile" 
                 ref={profileRef} 
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                title={`Налаштування профілю`}
             >
-                <img src={currentAvatar} alt="User Avatar" className="cabinet-avatar" />
+               
+                <img 
+                    src={currentAvatar} 
+                    alt="User Avatar" 
+                    className="cabinet-avatar" 
+                    title="Налаштування профілю" 
+                />
                 <span className="cabinet-username">{userData.name}</span>
 
-               
                 {isProfileMenuOpen && (
                     <div className="cabinet-dropdown profile-dropdown" onClick={(e) => e.stopPropagation()}>
                         
                         {!isChoosingAvatar ? (
-                            
                             <>
                                 <button onClick={() => setIsChoosingAvatar(true)}>Змінити аватарку</button>
                                 <button className="logout-btn" onClick={logout}>Вийти з акаунту</button>
                             </>
                         ) : (
-                          
                             <div className="avatar-selection">
                                 <p className="avatar-selection-title">Обери новий стиль:</p>
                                 <div className="avatar-grid">

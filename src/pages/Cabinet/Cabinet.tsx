@@ -19,7 +19,6 @@ function Cabinet() {
         if (savedData) {
             setLocalItems(JSON.parse(savedData));
         } else if (userData?.savedItems) {
-           
             setLocalItems(userData.savedItems);
             localStorage.setItem('myLeafeaCards', JSON.stringify(userData.savedItems));
         }
@@ -28,13 +27,25 @@ function Cabinet() {
     const handleAddNewItem = (newItem: any) => {
         const updatedItems = [newItem, ...localItems];
         setLocalItems(updatedItems);
-        
+        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    };
+
+    const handleDeleteItem = (idToDelete: number) => {
+        const updatedItems = localItems.filter(item => item.id !== idToDelete);
+        setLocalItems(updatedItems);
         localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
     };
 
     if (loading) {
         return <div className="cabinet-loading">Завантаження твого простору...</div>;
     }
+
+    const currentStats = {
+        movies: localItems.filter(item => item.category === 'movie').length,
+        series: localItems.filter(item => item.category === 'series').length,
+        anime: localItems.filter(item => item.category === 'anime').length,
+        books: localItems.filter(item => item.category === 'book').length,
+    };
 
     return (
         <div className="cabinet-page">
@@ -58,7 +69,9 @@ function Cabinet() {
             <main className="cabinet-content">
                 {activeTab === 'all' && (
                     <section className="tab-main">
-                        <UserStatistics name={userData.name} stats={userData.stats} />
+                       
+                        <UserStatistics name={userData.name} stats={currentStats} />
+                        
                         <div className="recent-items-section">
                             <h2 className="recent-title">
                                 <img src={star} alt="star" className="star-icon" /> 
@@ -68,10 +81,12 @@ function Cabinet() {
                                 {localItems.map((item: any) => (
                                     <CabinetCard 
                                         key={item.id}
+                                        id={item.id}
                                         title={item.title}
                                         description={item.description}
                                         image={item.image}
                                         category={item.category}
+                                        onDelete={handleDeleteItem}
                                     />
                                 ))}
                             </div>

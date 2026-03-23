@@ -16,15 +16,13 @@
 }
 
 .cabinet-add-btn {
-    position: absolute;
-    right: -85px; 
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     background-color: #c955d4;
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 1.2rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -41,9 +39,8 @@
 
 .cabinet-dropdown {
     position: absolute;
-    top: 100%;
+    top: 85px; 
     left: 0;
-    margin-top: 15px;
     background-color: #111026;
     border: 1px solid rgba(130, 70, 255, 0.3);
     border-radius: 12px;
@@ -121,9 +118,9 @@
 }
 
 .profile-dropdown {
-    left: auto;
-    right: 0;
-    top: 110%; 
+    left: auto; 
+    right: 0;   
+    top: 130%; 
 }
 
 .logout-btn:hover {

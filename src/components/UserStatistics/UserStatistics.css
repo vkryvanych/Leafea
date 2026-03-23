@@ -1,4 +1,6 @@
 .welcome-banner {
+    position: relative;
+    transform-style: preserve-3d;
     background: linear-gradient(135deg, rgba(130, 70, 255, 0.15) 0%, rgba(3, 2, 18, 0.4) 100%);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -78,4 +80,27 @@
     font-size: 1.6rem;
     font-family: 'Alice', serif; 
     color: white; 
+}
+
+.welcome-banner-glare {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit; 
+    pointer-events: none;  
+    z-index: 1;             
+    opacity: 0;            
+    transition: opacity 0.4s ease;
+}
+
+
+.welcome-banner:hover .welcome-banner-glare {
+    opacity: 1;
+}
+
+.welcome-banner-content {
+    position: relative;
+    z-index: 2;
 }

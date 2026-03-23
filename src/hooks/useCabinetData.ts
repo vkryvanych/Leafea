@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import card1 from '../assets/card_1.jpg';
 import card2 from '../assets/card_2.jpg';
+import girl2_ava from '../assets/girl2_ava.jpg'; 
 
 
 const MOCK_SAVED_ITEMS = [
@@ -49,7 +50,7 @@ export const useCabinetData = () => {
 
             setUserData({
                 name: "Вікторія",
-                avatar: "https://i.pravatar.cc/150?img=47",
+                avatar: girl2_ava,
                 stats: stats,
                 savedItems: MOCK_SAVED_ITEMS 
             });
