@@ -4,6 +4,10 @@ import iconMovie from '../../assets/movie.png';
 import iconSeries from '../../assets/netflix.png';
 import iconAnime from '../../assets/anime.png';
 import iconBook from '../../assets/book.png';
+import anime_def from '../../assets/anime_def.jpg';
+import movie_def from '../../assets/movie_def.jpg';
+import book_def from '../../assets/book_def.jpg';
+import serial_def from '../../assets/serial_def.jpg';
 
 interface CabinetCardProps {
     id: number; 
@@ -20,6 +24,15 @@ function CabinetCard({ id, title, description, image, category, onDelete }: Cabi
     
     const menuRef = useRef<HTMLDivElement>(null);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const defaultPosters = {
+        movie: movie_def,
+        series: serial_def,
+        anime: anime_def,
+        book: book_def
+    };
+
+    const currentImage = image || defaultPosters[category];
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -71,7 +84,14 @@ function CabinetCard({ id, title, description, image, category, onDelete }: Cabi
 
     return (
         <div className="cabinet-card">
-            <img src={image} alt={title} className="card-poster" />
+            <img 
+                src={currentImage} 
+                alt={title} 
+                className="card-poster" 
+                onError={(e) => {
+                    e.currentTarget.src = defaultPosters[category];
+                }}
+            />
             
             <div className="card-content">
                 <h2 className="card-title">{title}</h2>

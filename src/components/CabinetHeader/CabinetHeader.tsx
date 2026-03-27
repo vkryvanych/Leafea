@@ -88,6 +88,7 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                 <button 
                     className="cabinet-add-btn"
                     onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
+                    title="Додати рекомендацію"
                 >
                     +
                 </button>

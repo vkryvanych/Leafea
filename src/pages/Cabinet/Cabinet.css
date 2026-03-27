@@ -11,12 +11,10 @@
     overflow-x: hidden; 
 }
 
-
 .cabinet-content {
     position: relative;
     z-index: 10;
 }
-
 
 .cabinet-bg-flower {
     position: absolute;
@@ -41,7 +39,6 @@
     animation: float-bg 6s ease-in-out infinite; 
 }
 
-
 .cabinet-loading {
     min-height: 100vh;
     display: flex;
@@ -52,7 +49,6 @@
     font-size: 1.5rem;
     font-family: 'Alice', serif;
 }
-
 
 .recent-items-section {
     max-width: 900px;
@@ -69,7 +65,6 @@
     gap: 15px;
 }
 
-
 .star-icon {
     width: 60px;
     height: auto;
@@ -83,10 +78,52 @@
     gap: 10px;
 }
 
-
 .placeholder-tab {
     text-align: center;
     padding: 50px;
     font-size: 1.2rem;
     color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-cabinet-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 600px; 
+    margin: 60px auto 150px auto; 
+}
+
+.empty-title {
+    position: relative; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Alice', serif;
+    font-size: 2rem;
+    color: white;
+    margin: 0 0 15px 0; 
+    font-weight: 400;
+    width: max-content; 
+}
+
+.emerald-icon {
+    position: absolute;
+    left: 100%; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    margin-left: 15px;
+    width: 65px; 
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(77, 16, 110, 0.9)); 
+}
+
+.empty-cabinet-state p {
+    font-family: 'Alice', sans-serif; 
+    font-size: 1.2rem; 
+    color: white;
+    margin: 0;
+    line-height: 1.5;
 }

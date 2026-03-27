@@ -5,6 +5,7 @@ import UserStatistics from '../../components/UserStatistics/UserStatistics';
 import CabinetCard from '../../components/CabinetCard/CabinetCard';
 import AddModal from '../../components/AddModal/AddModal'; 
 import star from '../../assets/star.png';
+import emerald from '../../assets/emerald.png'; 
 import './Cabinet.css';
 
 function Cabinet() {
@@ -72,25 +73,35 @@ function Cabinet() {
                        
                         <UserStatistics name={userData.name} stats={currentStats} />
                         
-                        <div className="recent-items-section">
-                            <h2 className="recent-title">
-                                <img src={star} alt="star" className="star-icon" /> 
-                                Нещодавно додане
-                            </h2>
-                            <div className="saved-items-list">
-                                {localItems.map((item: any) => (
-                                    <CabinetCard 
-                                        key={item.id}
-                                        id={item.id}
-                                        title={item.title}
-                                        description={item.description}
-                                        image={item.image}
-                                        category={item.category}
-                                        onDelete={handleDeleteItem}
-                                    />
-                                ))}
+                        {localItems.length === 0 ? (
+                            <div className="empty-cabinet-state">
+                                <h3 className="empty-title">
+                                    Тут поки порожньо 
+                                    <img src={emerald} alt="emerald" className="emerald-icon" />
+                                </h3>
+                                <p>Додай свою першу рекомендацію, щоб почати формувати власний простір!</p>
+                            </div> 
+                        ) : (
+                            <div className="recent-items-section">
+                                <h2 className="recent-title">
+                                    <img src={star} alt="star" className="star-icon" /> 
+                                    Нещодавно додане
+                                </h2>
+                                <div className="saved-items-list">
+                                    {localItems.map((item: any) => (
+                                        <CabinetCard 
+                                            key={item.id}
+                                            id={item.id}
+                                            title={item.title}
+                                            description={item.description}
+                                            image={item.image}
+                                            category={item.category}
+                                            onDelete={handleDeleteItem}
+                                        />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </section>
                 )}
                 {activeTab === 'inProgress' && <div className="placeholder-tab">Тут будуть картки "В процесі"</div>}
