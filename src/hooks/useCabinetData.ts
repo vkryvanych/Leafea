@@ -1,39 +1,7 @@
 import { useState, useEffect } from 'react';
-import card1 from '../assets/card_1.jpg';
-import card2 from '../assets/card_2.jpg';
 import girl2_ava from '../assets/girl2_ava.jpg'; 
 
-
-const MOCK_SAVED_ITEMS = [
-    {
-        id: 1,
-        title: "Джокер",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-        image: card1,
-        category: "movie" 
-    },
-    {
-        id: 2,
-        title: "Ідеальний сум",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-        image: card2,
-        category: "anime" 
-    },
-    {
-        id: 3,
-        title: "Перевтілення",
-        description: "Класичний твір Франца Кафки...",
-        image: card1, 
-        category: "book" 
-    },
-     {
-        id: 4,
-        title: "Граф Монте-Крісто",
-        description: "Класичний твір Франца Кафки...",
-        image: card1, 
-        category: "book" 
-    }
-];
+const MOCK_SAVED_ITEMS: any[] = [];
 
 export const useCabinetData = () => {
     const [userData, setUserData] = useState<any>(null);

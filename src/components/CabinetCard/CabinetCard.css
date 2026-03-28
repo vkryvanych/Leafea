@@ -44,6 +44,8 @@
     margin: 0 0 15px 0;
     font-weight: 400;
     letter-spacing: 1px;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .card-desc {
@@ -52,6 +54,8 @@
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .card-actions {

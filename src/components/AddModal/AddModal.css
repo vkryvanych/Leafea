@@ -107,8 +107,8 @@
 }
 
 .form-scroll-area {
-    max-height: 50vh; 
-    overflow-y: auto; 
+    max-height: 60vh; 
+    overflow-y: auto;
     padding-right: 10px; 
     margin-right: -10px; 
 }
@@ -116,19 +116,60 @@
 .form-scroll-area::-webkit-scrollbar {
     width: 6px;
 }
-
 .form-scroll-area::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05); 
     border-radius: 4px;
 }
-
 .form-scroll-area::-webkit-scrollbar-thumb {
     background: rgba(201, 85, 212, 0.5); 
     border-radius: 4px;
 }
-
 .form-scroll-area::-webkit-scrollbar-thumb:hover {
     background: rgba(201, 85, 212, 0.8);
+}
+
+.genres-scroll-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; 
+    padding-bottom: 8px; 
+}
+
+.genres-scroll-container::-webkit-scrollbar {
+    height: 4px;
+}
+.genres-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.genres-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(201, 85, 212, 0.5);
+    border-radius: 4px;
+}
+
+.genre-chip {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 8px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    white-space: nowrap; 
+    font-family: 'Alata', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.genre-chip:hover {
+    border-color: rgba(201, 85, 212, 0.5);
+    color: white;
+}
+
+.genre-chip.active {
+    background: rgba(201, 85, 212, 0.2);
+    border-color: #c955d4;
+    color: white;
+    box-shadow: 0 0 10px rgba(201, 85, 212, 0.3);
 }
 
 .modal-actions {

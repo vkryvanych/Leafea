@@ -9,6 +9,7 @@ import movie_def from '../../assets/movie_def.jpg';
 import book_def from '../../assets/book_def.jpg';
 import serial_def from '../../assets/serial_def.jpg';
 
+
 interface CabinetCardProps {
     id: number; 
     title: string;
@@ -16,9 +17,11 @@ interface CabinetCardProps {
     image: string;
     category: 'movie' | 'series' | 'anime' | 'book';
     onDelete: (id: number) => void; 
+    onStart: (id: number) => void; 
 }
 
-function CabinetCard({ id, title, description, image, category, onDelete }: CabinetCardProps) {
+
+function CabinetCard({ id, title, description, image, category, onDelete, onStart }: CabinetCardProps) {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [showConfirmMenu, setShowConfirmMenu] = useState(false); 
     
@@ -123,7 +126,10 @@ function CabinetCard({ id, title, description, image, category, onDelete }: Cabi
                     )}
 
                 </div>
-                <button className="card-action-btn">Почати</button>
+
+                <button className="card-action-btn" onClick={() => onStart(id)}>
+                    Почати
+                </button>
             </div>
         </div>
     );
