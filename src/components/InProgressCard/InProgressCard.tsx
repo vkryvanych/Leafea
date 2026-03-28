@@ -22,11 +22,12 @@ interface InProgressCardProps {
     currentPage?: number;
     onDelete: (id: number) => void; 
     onUpdateProgress?: (id: number, newProgress: number) => void; 
+    onMarkAsWatched?: (id: number) => void; 
 }
 
 function InProgressCard({ 
     id, title, image, category, creator, genres, startDate, 
-    totalPages = 0, currentPage = 0, onDelete, onUpdateProgress 
+    totalPages = 0, currentPage = 0, onDelete, onUpdateProgress, onMarkAsWatched 
 }: InProgressCardProps) {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [showConfirmMenu, setShowConfirmMenu] = useState(false); 
@@ -144,7 +145,9 @@ function InProgressCard({
                             <button 
                                 className="card-action-btn"
                                 onClick={() => {
-                                    if (category !== 'movie') {
+                                    if (category === 'movie') {
+                                        if (onMarkAsWatched) onMarkAsWatched(id);
+                                    } else {
                                         setTempProgress(currentPage);
                                         setShowProgressMenu(!showProgressMenu);
                                     }
@@ -165,7 +168,20 @@ function InProgressCard({
                                         value={tempProgress}
                                         min="0"
                                         max={totalPages}
-                                        onChange={(e) => setTempProgress(e.target.value === '' ? '' : Number(e.target.value))}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (val === '') {
+                                                setTempProgress('');
+                                                return;
+                                            }
+                                            let num = parseInt(val, 10);
+                                            if (totalPages && totalPages > 0 && num > totalPages) {
+                                                num = totalPages;
+                                            }
+                                            if (num < 0) num = 0;
+                                            
+                                            setTempProgress(num);
+                                        }}
                                     />
                                     <div className="progress-buttons-container">
                                         <button 

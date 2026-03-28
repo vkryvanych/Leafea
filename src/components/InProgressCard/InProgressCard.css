@@ -100,9 +100,10 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #b58d34 0%, #ffe082 50%, #b58d34 100%); 
+    background: linear-gradient(90deg, #9c3fb8 0%, #e0aaff 50%, #9c3fb8 100%); 
     background-size: 200% 100%; 
     border-radius: 10px;
+    transition: width 0.4s ease-out; 
 }
 
 .cabinet-card:hover .progress-fill {
