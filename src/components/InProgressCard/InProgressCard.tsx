@@ -23,11 +23,12 @@ interface InProgressCardProps {
     onDelete: (id: number) => void; 
     onUpdateProgress?: (id: number, newProgress: number) => void; 
     onMarkAsWatched?: (id: number) => void; 
+    onOpenAddQuote?: (id: number) => void; 
 }
 
 function InProgressCard({ 
     id, title, image, category, creator, genres, startDate, 
-    totalPages = 0, currentPage = 0, onDelete, onUpdateProgress, onMarkAsWatched 
+    totalPages = 0, currentPage = 0, onDelete, onUpdateProgress, onMarkAsWatched, onOpenAddQuote 
 }: InProgressCardProps) {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [showConfirmMenu, setShowConfirmMenu] = useState(false); 
@@ -139,7 +140,12 @@ function InProgressCard({
                     )}
 
                     <div className="in-progress-buttons">
-                        <button className="card-action-btn">Додати цитату</button>
+                        <button 
+                            className="card-action-btn"
+                            onClick={() => onOpenAddQuote && onOpenAddQuote(id)}
+                        >
+                            Додати цитату
+                        </button>
                         
                         <div className="progress-menu-wrapper" ref={progressMenuRef}>
                             <button 

@@ -1,0 +1,191 @@
+.quote-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(3, 2, 18, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-modal-content {
+    background-color: #111026; 
+    border: 1px solid rgba(130, 70, 255, 0.3); 
+    border-radius: 15px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); 
+    padding: 30px 40px;
+    width: 90%;
+    max-width: 500px;
+    height: 550px;
+    position: relative;
+    color: white;
+    animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden; 
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.quote-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 2.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0;
+}
+
+.quote-modal-close:hover { color: white; }
+
+.quote-modal-title {
+    font-family: 'Alice', serif;
+    font-size: 2rem;
+    margin: 0 0 20px 0;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.quote-modal-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-right: -15px; 
+    margin-bottom: 25px; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.quote-modal-area::-webkit-scrollbar { width: 6px; }
+.quote-modal-area::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; margin: 5px; }
+.quote-modal-area::-webkit-scrollbar-thumb { background: rgba(201, 85, 212, 0.5); border-radius: 4px; }
+.quote-modal-area::-webkit-scrollbar-thumb:hover { background: rgba(201, 85, 212, 0.8); }
+
+.quote-context {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+}
+
+.quote-title {
+    font-family: 'Alice', serif;
+    font-size: 1.3rem;
+    color: #e0aaff; 
+}
+
+.quote-creator {
+    font-family: 'Alata', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.quote-form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.quote-input {
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.1rem;
+    border-radius: 12px; 
+    padding: 15px;
+    color: white; 
+    font-family: 'Alice', serif; 
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+    height: 100%;
+    min-height: 150px;
+    resize: none; 
+    box-sizing: border-box;
+}
+
+.quote-input:focus {
+    outline: none; 
+    border-color: #c955d4;
+    background: rgba(201, 85, 212, 0.05); 
+    box-shadow: 0 0 8px rgba(201, 85, 212, 0.3);
+}
+
+.quote-input::-webkit-scrollbar { width: 6px; }
+.quote-input::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; margin: 5px; }
+.quote-input::-webkit-scrollbar-thumb { background: rgba(201, 85, 212, 0.5); border-radius: 4px; }
+.quote-input::-webkit-scrollbar-thumb:hover { background: rgba(201, 85, 212, 0.8); }
+
+.quote-modal-actions {
+    display: flex;
+    align-items: center;
+    margin-top: auto; 
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    flex-shrink: 0;
+}
+
+.quote-modal-actions.centered-actions {
+    justify-content: center;
+    gap: 20px;
+}
+
+.quote-modal-actions.split-actions {
+    justify-content: space-between;
+}
+
+.right-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.quote-btn-cancel {
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Alice', serif;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.quote-btn-cancel:hover { color: #ff6b6b; }
+
+.quote-btn-cancel.delete-btn {
+    color: #ff6b6b;
+    opacity: 0.9;
+}
+
+.quote-btn-cancel.delete-btn:hover {
+    color: #ff4c4c;
+    opacity: 1;
+}
+
+.quote-btn-submit {
+    background: #c955d4;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-family: 'Alice', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.quote-btn-submit:hover { 
+    background: #e06cf0; 
+    transform: translateY(-2px);
+}

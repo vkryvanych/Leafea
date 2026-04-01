@@ -1,0 +1,82 @@
+.quote-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(201, 85, 212, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.quote-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201, 85, 212, 0.4);
+}
+
+.quote-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.quote-text {
+    font-family: 'Alice', serif;
+    font-size: 1.2rem;
+    color: white;
+    margin: 0;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.quote-text.editable-text {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.quote-text.editable-text:hover {
+    color: #c955d4; 
+}
+
+.heart-icon-wrapper {
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.heart-icon-wrapper:hover {
+    transform: scale(1.15);
+}
+
+.heart-svg {
+    width: 28px;
+    height: 28px;
+    fill: transparent;
+    stroke: rgba(255, 255, 255, 0.4); 
+    stroke-width: 2px;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.heart-icon-wrapper.favorite .heart-svg {
+    fill: #e0aaff; 
+    stroke: #e0aaff;
+    filter: drop-shadow(0 0 8px rgba(201, 85, 212, 0.6)); 
+}
+
+.quote-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.quote-author {
+    font-family: 'Alata', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: right;
+}

@@ -19,10 +19,11 @@ interface WatchedCardProps {
     review?: string;
     onDelete: (id: number) => void; 
     onUpdateDetails: (id: number, rating: string, review: string) => void; 
+    onViewQuotes?: (itemId: number) => void; 
 }
 
 function WatchedCard({ 
-    id, title, image, category, rating = '', review = '', onDelete, onUpdateDetails 
+    id, title, image, category, rating = '', review = '', onDelete, onUpdateDetails, onViewQuotes 
 }: WatchedCardProps) {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [showConfirmMenu, setShowConfirmMenu] = useState(false); 
@@ -135,7 +136,11 @@ function WatchedCard({
                 </div>
 
                 <div className="watched-footer">
-                    <button className="card-action-btn" onClick={() => console.log('Перехід до цитат')}>
+           
+                    <button 
+                        className="card-action-btn" 
+                        onClick={() => onViewQuotes && onViewQuotes(id)}
+                    >
                         Переглянути цитати
                     </button>
                 </div>

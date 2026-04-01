@@ -6,6 +6,9 @@ import CabinetCard from '../../components/CabinetCard/CabinetCard';
 import InProgressCard from '../../components/InProgressCard/InProgressCard';
 import WatchedCard from '../../components/WatchedCard/WatchedCard'; 
 import AddModal from '../../components/AddModal/AddModal'; 
+import AddQuoteModal from '../../components/AddQuoteModal/AddQuoteModal'; 
+import EditQuoteModal from '../../components/EditQuoteModal/EditQuoteModal'; 
+import QuoteCard from '../../components/QuoteCard/QuoteCard'; 
 import SearchBar from '../../components/SearchBar/SearchBar'; 
 import star from '../../assets/star.png';
 import emerald from '../../assets/emerald.png'; 
@@ -18,6 +21,14 @@ function Cabinet() {
     const [localItems, setLocalItems] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
+    const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+    const [selectedItemForQuote, setSelectedItemForQuote] = useState<any>(null);
+    const [activeQuoteTab, setActiveQuoteTab] = useState<'all' | 'favorites'>('all');
+
+    const [isEditQuoteModalOpen, setIsEditQuoteModalOpen] = useState(false);
+    const [editingQuote, setEditingQuote] = useState<{itemId: number, quoteId: string, text: string} | null>(null);
+    const [quoteFilterItemId, setQuoteFilterItemId] = useState<number | null>(null);
+
     useEffect(() => {
         const savedData = localStorage.getItem('myLeafeaCards');
         if (savedData) {
@@ -27,6 +38,12 @@ function Cabinet() {
             localStorage.setItem('myLeafeaCards', JSON.stringify([]));
         }
     }, []); 
+
+    useEffect(() => {
+        if (activeTab !== 'quotes') {
+            setQuoteFilterItemId(null);
+        }
+    }, [activeTab]);
 
     const handleAddNewItem = (newItem: any) => {
         const updatedItems = [newItem, ...localItems];
@@ -53,6 +70,8 @@ function Cabinet() {
         });
         setLocalItems(updatedItems);
         localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+        
+        setActiveTab('inProgress'); 
     };
 
     const handleUpdateProgress = (idToUpdate: number, newProgress: number) => {
@@ -93,6 +112,96 @@ function Cabinet() {
         localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
     };
 
+    const handleOpenQuoteModal = (id: number) => {
+        const item = localItems.find(i => i.id === id);
+        if (item) {
+            setSelectedItemForQuote(item);
+            setIsQuoteModalOpen(true);
+        }
+    };
+
+    const handleSaveQuote = (quoteText: string) => {
+        if (!selectedItemForQuote) return;
+
+        const newQuote = {
+            id: Date.now().toString(), 
+            text: quoteText,
+            isFavorite: false 
+        };
+
+        const updatedItems = localItems.map(item => {
+            if (item.id === selectedItemForQuote.id) {
+                const existingQuotes = item.quotes || [];
+                return { ...item, quotes: [newQuote, ...existingQuotes] };
+            }
+            return item;
+        });
+
+        setLocalItems(updatedItems);
+        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+        setActiveTab('quotes');
+        setActiveQuoteTab('all'); 
+    };
+
+    const handleToggleFavoriteQuote = (itemId: number, quoteId: string) => {
+        const updatedItems = localItems.map(item => {
+            if (item.id === itemId && item.quotes) {
+                const updatedQuotes = item.quotes.map((q: any) => 
+                    q.id === quoteId ? { ...q, isFavorite: !q.isFavorite } : q
+                );
+                return { ...item, quotes: updatedQuotes };
+            }
+            return item;
+        });
+        setLocalItems(updatedItems);
+        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    };
+
+    const handleOpenEditQuote = (itemId: number, quoteId: string) => {
+        const item = localItems.find(i => i.id === itemId);
+        const quote = item?.quotes?.find((q: any) => q.id === quoteId);
+        if (quote) {
+            setEditingQuote({ itemId, quoteId, text: quote.text });
+            setIsEditQuoteModalOpen(true);
+        }
+    };
+
+    const handleSaveEditedQuote = (newText: string) => {
+        if (!editingQuote) return;
+        const updatedItems = localItems.map(item => {
+            if (item.id === editingQuote.itemId) {
+                const updatedQuotes = item.quotes.map((q: any) => 
+                    q.id === editingQuote.quoteId ? { ...q, text: newText } : q
+                );
+                return { ...item, quotes: updatedQuotes };
+            }
+            return item;
+        });
+        setLocalItems(updatedItems);
+        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    };
+
+    const handleDeleteQuote = () => {
+        if (!editingQuote) return;
+        const updatedItems = localItems.map(item => {
+            if (item.id === editingQuote.itemId) {
+                const updatedQuotes = item.quotes.filter((q: any) => q.id !== editingQuote.quoteId);
+                return { ...item, quotes: updatedQuotes };
+            }
+            return item;
+        });
+        setLocalItems(updatedItems);
+        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+        setIsEditQuoteModalOpen(false);
+    };
+
+    const handleViewSpecificQuotes = (itemId: number) => {
+        setQuoteFilterItemId(itemId); 
+        setActiveQuoteTab('all');     
+        setSearchQuery('');          
+        setActiveTab('quotes');    
+    };
+
     if (loading) return <div className="cabinet-loading">Завантаження твого простору...</div>;
 
     const currentStats = {
@@ -102,9 +211,51 @@ function Cabinet() {
         books: localItems.filter(item => item.category === 'book').length,
     };
 
+    const allQuotes = localItems.flatMap(item => 
+        (item.quotes || []).map((q: any) => ({
+            ...q,
+            itemId: item.id,
+            title: item.title,
+            creator: item.creator || 'Невідомо'
+        }))
+    ).sort((a, b) => Number(b.id) - Number(a.id)); 
+
+    const displayedQuotes = allQuotes
+        .filter(q => quoteFilterItemId ? q.itemId === quoteFilterItemId : true) 
+        .filter(q => activeQuoteTab === 'favorites' ? q.isFavorite : true)
+        .filter(q => 
+            q.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            q.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            q.creator.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+    const filteredItemTitle = quoteFilterItemId 
+        ? localItems.find(i => i.id === quoteFilterItemId)?.title 
+        : null;
+
     return (
         <div className="cabinet-page">
             <AddModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddNewItem} />
+            
+            <AddQuoteModal 
+                isOpen={isQuoteModalOpen} 
+                onClose={() => {
+                    setIsQuoteModalOpen(false);
+                    setSelectedItemForQuote(null);
+                }} 
+                onSave={handleSaveQuote} 
+                title={selectedItemForQuote?.title || ''} 
+                creator={selectedItemForQuote?.creator || ''}
+                itemId={selectedItemForQuote?.id || null} 
+            />
+            
+            <EditQuoteModal 
+                isOpen={isEditQuoteModalOpen}
+                onClose={() => setIsEditQuoteModalOpen(false)}
+                onSave={handleSaveEditedQuote}
+                onDelete={handleDeleteQuote}
+                initialText={editingQuote?.text || ''}
+            />
             
             <div className="bg-orb orb-1"></div>
             <div className="bg-orb orb-2"></div>
@@ -153,6 +304,7 @@ function Cabinet() {
                                         startDate={item.startDate} totalPages={item.totalPages} currentPage={item.currentPage || 0}
                                         onDelete={handleDeleteItem} onUpdateProgress={handleUpdateProgress} 
                                         onMarkAsWatched={handleMarkAsWatched} 
+                                        onOpenAddQuote={handleOpenQuoteModal} 
                                     />
                             ))}
                             {localItems.filter(item => item.status === 'inProgress').length === 0 && (
@@ -174,6 +326,7 @@ function Cabinet() {
                                         key={item.id} id={item.id} title={item.title} image={item.image}
                                         category={item.category} rating={item.rating || ''} review={item.review || ''}
                                         onDelete={handleDeleteItem} onUpdateDetails={handleUpdateWatchedDetails} 
+                                        onViewQuotes={handleViewSpecificQuotes} 
                                     />
                             ))}
                             {localItems.filter(item => item.status === 'watched').length === 0 && (
@@ -183,7 +336,72 @@ function Cabinet() {
                     </section>
                 )}
 
-                {activeTab === 'quotes' && <div className="placeholder-tab">Тут будуть твої улюблені цитати</div>}
+                {activeTab === 'quotes' && (
+                    <section className="tab-main">
+                        {quoteFilterItemId && (
+                            <div className="quote-filter-container">
+                                <div className="quote-filter-pill">
+                                    <span className="quote-filter-text">
+                                        Показано цитати з: <strong className="quote-filter-title">«{filteredItemTitle}»</strong>
+                                    </span>
+                                    <button 
+                                        className="quote-filter-close"
+                                        onClick={() => setQuoteFilterItemId(null)}
+                                        title="Скинути фільтр"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
+                        <div className="quote-subtabs">
+                            <span 
+                                className={`quote-subtab-btn ${activeQuoteTab === 'all' ? 'active' : ''}`}
+                                onClick={() => setActiveQuoteTab('all')}
+                            >
+                                Усі цитати
+                            </span>
+                            <span className="quote-subtab-divider">|</span>
+                            <span 
+                                className={`quote-subtab-btn ${activeQuoteTab === 'favorites' ? 'active' : ''}`}
+                                onClick={() => setActiveQuoteTab('favorites')}
+                            >
+                                Улюблені
+                            </span>
+                        </div>
+
+                        <div className="quotes-container">
+                            {displayedQuotes.length > 0 ? (
+                                displayedQuotes.map(quote => (
+                                    <QuoteCard 
+                                        key={quote.id}
+                                        id={quote.id}
+                                        itemId={quote.itemId}
+                                        text={quote.text}
+                                        title={quote.title}
+                                        creator={quote.creator}
+                                        isFavorite={quote.isFavorite}
+                                        onToggleFavorite={handleToggleFavoriteQuote}
+                                        onEditQuote={handleOpenEditQuote} 
+                                    />
+                                ))
+                            ) : (
+                                <div className="placeholder-tab">
+                                    {searchQuery 
+                                        ? `За запитом "${searchQuery}" цитат не знайдено.`
+                                        : quoteFilterItemId
+                                            ? `У творі «${filteredItemTitle}» ще немає цитат.`
+                                            : activeQuoteTab === 'favorites' 
+                                                ? "У тебе поки немає улюблених цитат. Натисни на сердечко біля будь-якої цитати!" 
+                                                : "Ти ще не додав жодної цитати."}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                )}
             </main>
         </div>
     );

@@ -20,6 +20,10 @@
     padding: 30px 40px;
     width: 90%;
     max-width: 450px;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     position: relative;
     color: white;
     animation: modalFadeIn 0.3s ease-out;
