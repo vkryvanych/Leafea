@@ -193,28 +193,104 @@
     background-color: rgba(201, 85, 212, 0.2);
 }
 
+
 @media (max-width: 768px) {
     .in-progress-content {
         flex-direction: column;
     }
-    .action-column {
-        align-items: center;
-        width: 100%;
-        margin-top: 20px;
-    }
+    
     .card-icon-wrapper {
         position: absolute;
         top: 20px;
         right: 20px;
     }
-    .in-progress-buttons {
-        flex-wrap: wrap;
-        justify-content: center;
+
+    .in-progress-content .in-progress-details {
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 10px 15px;
+        width: 100%;
+        margin-top: 15px;
     }
+
+    .in-progress-content .in-progress-details .detail-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0; 
+        width: auto; 
+    }
+
+    .in-progress-content .in-progress-details .detail-item:nth-child(3) {
+        grid-column: span 2;
+        margin-top: 5px;
+    }
+  
+    .progress-container, .progress-section {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 15px 0;
+        overflow: hidden; 
+    }
+
+    .action-column {
+        align-items: stretch; 
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .in-progress-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .in-progress-buttons button {
+        width: 100%; 
+        margin: 0;
+        padding: 10px 0;
+        font-size: 0.95rem;
+    }
+
     .card-dropdown.progress-menu {
         left: 50%;
         top: auto;
         bottom: calc(100% + 10px);
         transform: translateX(-50%);
+        width: 90%; 
     }
-}
+
+    .card-dropdown.progress-menu {
+        width: 210px; 
+        padding: 12px;
+    }
+
+    .progress-menu-title {
+        font-size: 0.9rem;
+        text-align: left;
+        margin-bottom: 8px; 
+    }
+
+    .progress-input {
+        text-align: left; 
+        font-size: 0.95rem;
+        padding: 6px 10px;
+        margin-bottom: 12px; 
+        height: 34px; 
+    }
+
+    .progress-buttons-container {
+        display: flex;
+        gap: 8px; 
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .progress-buttons-container button {
+        flex: 1; 
+        font-size: 0.85rem; 
+        padding: 6px 4px; 
+        white-space: nowrap;
+    }
+} 

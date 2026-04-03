@@ -206,10 +206,63 @@
         align-items: center;
         text-align: center;
         padding: 20px;
+        position: relative;
     }
     .card-actions {
         flex-direction: row;
         width: 100%;
         margin-top: 15px;
+    }
+
+    .card-icon-circle {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        top: -2px; 
+        right: -5px; 
+    }
+
+    .category-img-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .delete-cross {
+        font-size: 1.4rem;
+    }
+
+    .card-action-btn {
+        margin: 0 auto;
+        display: block; 
+        width: 80%; 
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .card-category {
+        text-align: center;
+    }
+
+    .card-dropdown {
+        right: -10px; 
+        left: auto;
+        top: 100%;
+        margin-top: 45px;
+        width: 130px; 
+        padding: 10px;
+        transform: none; 
+    }
+
+    .card-dropdown-title {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+
+    .card-dropdown-buttons button {
+        font-size: 0.85rem;
+        padding: 6px 10px;
     }
 }

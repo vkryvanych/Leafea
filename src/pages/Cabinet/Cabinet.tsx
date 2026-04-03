@@ -272,7 +272,7 @@ function Cabinet() {
                         {localItems.filter(item => item.status === 'planned').length === 0 ? (
                             <div className="empty-cabinet-state">
                                 <h3 className="empty-title">Тут поки порожньо! <img src={emerald} alt="emerald" className="emerald-icon" /></h3>
-                                <p>Додай свою першу рекомендацію, щоб почати формувати власний простір!</p>
+                                <p>Додай свою першу рекомендацію, щоб почати формувати власний простір</p>
                             </div> 
                         ) : (
                             <div className="recent-items-section">

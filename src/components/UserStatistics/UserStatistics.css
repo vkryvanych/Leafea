@@ -59,7 +59,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
 .stat-circle:hover {
     transform: translateY(-5px);
     box-shadow: inset 0 0 0 3px rgba(130, 70, 255, 0.5), 0 10px 20px rgba(130, 70, 255, 0.4);
@@ -68,7 +67,6 @@
 .stat-icon {
     font-size: 2.5rem;
 }
-
 
 .stat-circle img {
     width: 50%;
@@ -90,11 +88,10 @@
     bottom: 0;
     border-radius: inherit; 
     pointer-events: none;  
-    z-index: 1;             
+    z-index: 1;            
     opacity: 0;            
     transition: opacity 0.4s ease;
 }
-
 
 .welcome-banner:hover .welcome-banner-glare {
     opacity: 1;
@@ -103,4 +100,41 @@
 .welcome-banner-content {
     position: relative;
     z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .welcome-banner {
+        padding: 25px 15px; 
+        width: 100%;
+        border-radius: 16px;
+    }
+
+    .welcome-title {
+        font-size: 1.8rem; 
+    }
+
+    .welcome-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+
+    .stats-container {
+        flex-wrap: nowrap; 
+        gap: 10px; 
+        justify-content: space-between; 
+    }
+
+    .stat-circle {
+        width: 55px;
+        height: 55px;
+    }
+
+    .stat-circle img {
+        width: 26px; 
+        height: 26px;
+    }
+
+    .stat-number {
+        font-size: 1.2rem; 
+    }
 }

@@ -41,3 +41,31 @@
 .search-input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
+
+@media (max-width: 768px) {
+    .search-container {
+        margin-top: -45px; 
+        margin-bottom: 40px;
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .search-icon {
+        width: 20px; 
+        height: 20px;
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .search-input {
+        padding: 10px 15px 10px 45px; 
+        font-size: 0.95rem;
+        height: 45px;
+    }
+}

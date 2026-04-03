@@ -189,3 +189,110 @@
     background: #e06cf0; 
     transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+    .quote-modal-content {
+        padding: 25px 15px; 
+        width: 95%; 
+        min-height: 460px; 
+        height: auto; 
+        max-height: 90vh; 
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quote-modal-close {
+        top: 10px;
+        right: 15px;
+        font-size: 2rem; 
+    }
+
+    .quote-modal-title {
+        font-size: 1.7rem; 
+        margin-bottom: 20px; 
+    }
+
+    .quote-context {
+        gap: 12px; 
+        margin-bottom: 15px; 
+    }
+
+    .quote-title {
+        font-size: 1.2rem; 
+    }
+
+    .quote-creator {
+        font-size: 0.95rem;
+    }
+
+    .quote-modal-area {
+        flex: 1; 
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px; 
+    }
+
+    .quote-form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quote-input {
+        padding: 15px;
+        font-size: 1.05rem; 
+        flex: 1; 
+        min-height: 160px; 
+    }
+
+    .quote-modal-actions {
+        padding-top: 15px;
+    }
+
+    .quote-modal-actions.centered-actions {
+        flex-direction: column; 
+        align-items: center; 
+        gap: 15px; 
+    }
+
+    .centered-actions .quote-btn-submit,
+    .centered-actions .quote-btn-cancel {
+        width: 85%; 
+        padding: 14px 10px;
+        font-size: 1rem; 
+        border-radius: 12px; 
+    }
+
+    .quote-modal-actions.split-actions {
+        flex-direction: row; 
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .right-actions {
+        gap: 8px; 
+        display: flex;
+        align-items: center;
+    }
+
+    .split-actions .quote-btn-submit {
+        width: auto; 
+        padding: 10px 14px; 
+        font-size: 1rem; 
+        border-radius: 8px;
+    }
+
+    .split-actions .quote-btn-cancel,
+    .split-actions .delete-btn {
+        width: auto; 
+        padding: 10px 5px; 
+        font-size: 0.95rem; 
+    }
+
+    .split-actions .card-dropdown {
+        left: 0; 
+        right: auto;
+        width: 130px;
+    }
+}

@@ -140,22 +140,127 @@
     background: rgba(201, 85, 212, 0.8);
 }
 
+
 @media (max-width: 768px) {
-    .watched-header {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .watched-dropdown {
-        right: 50%;
-        transform: translateX(50%);
+    .cabinet-card.watched-card {
+        height: auto; 
+        flex-direction: column;
+        align-items: center; 
+        text-align: center;
+        padding: 30px 15px 20px; 
     }
 
-    .review-input {
-        max-width: 100%;
+    .cabinet-card.watched-card .card-poster {
+        display: block; 
+        margin: 0 auto; 
+        width: 100%;
+        max-width: 200px; 
+        height: auto;
+        border-radius: 10px;
     }
-    
-    .star {
-        font-size: 1.5rem; 
+
+    .cabinet-card.watched-card .watched-content {
+        padding: 10px 0 0; 
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cabinet-card.watched-card .watched-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px; 
+        margin-bottom: 5px; 
+        position: static; 
+    }
+
+    .cabinet-card.watched-card .card-title {
+        max-width: 100%; 
+        font-size: 1.3rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    .cabinet-card.watched-card .card-icon-wrapper {
+        position: absolute;
+        top: 12px; 
+        right: 12px; 
+    }
+
+    .cabinet-card.watched-card .watched-body {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px; 
+        margin-bottom: 15px; 
+    }
+
+    .cabinet-card.watched-card .input-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cabinet-card.watched-card .input-group label {
+        font-size: 0.85rem;
+        margin-bottom: 2px; 
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .cabinet-card.watched-card .star-rating {
+        display: flex;
+        flex-wrap: nowrap; 
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+        width: 100%;
+    }
+
+    .cabinet-card.watched-card .star {
+        font-size: 1.4rem; 
+    }
+
+    .cabinet-card.watched-card .rating-number-display {
+        text-align: center;
+        width: auto;
+        margin-top: 0; 
+        margin-left: 6px;
+        font-size: 0.9rem;
+        display: inline-block; 
+    }
+
+    .cabinet-card.watched-card .review-input {
+        max-width: 100%;
+        width: 100%;
+        min-height: 105px;
+        font-size: 0.9rem;
+        padding: 10px;
+        box-sizing: border-box; 
+    }
+
+    .cabinet-card.watched-card .watched-footer {
+        width: 100%;
+        margin-top: 0; 
+        justify-content: center;
+    }
+
+    .cabinet-card.watched-card .card-action-btn {
+        width: 100%; 
+        margin: 0;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    .cabinet-card.watched-card .watched-dropdown {
+        right: 0; 
+        left: auto;
+        top: 100%;
+        margin-top: 5px;
+        transform: none;
+        width: 130px;
     }
 }

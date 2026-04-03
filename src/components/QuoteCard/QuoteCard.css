@@ -80,3 +80,52 @@
     color: rgba(255, 255, 255, 0.7);
     text-align: right;
 }
+
+@media (max-width: 768px) {
+    .quote-card {
+        position: relative;
+        padding: 20px 15px; 
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .quote-card-body {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .heart-icon-wrapper {
+        position: absolute; 
+        top: 15px;
+        right: 15px;
+        margin: 0;
+    }
+
+    .heart-svg {
+        width: 22px; 
+        height: 22px;
+    }
+
+    .quote-text {
+        font-size: 1.1rem;
+        margin-top: 5px; 
+        margin-bottom: 15px;
+        padding-right: 30px; 
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word; 
+    }
+
+    .quote-card-footer {
+        width: 100%;
+        text-align: right; 
+    }
+
+    .quote-author {
+        font-size: 0.95rem; 
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
