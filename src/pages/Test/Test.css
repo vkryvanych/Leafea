@@ -1,0 +1,109 @@
+.test-page-wrapper {
+    min-height: 100vh;
+    width: 100%;
+    padding-top: 90px; 
+    padding-bottom: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    background-color: #030212; 
+    box-sizing: border-box; 
+    position: relative; 
+    overflow: hidden;
+    background-image: 
+        radial-gradient(circle at top right, rgba(130, 70, 255, 0.35) 0%, transparent 650px),
+        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.35) 0%, transparent 650px);
+    background-attachment: fixed;
+}
+
+.test-butterfly {
+    position: absolute;
+    top: 70px; 
+    left: 15%; 
+    width: 110px; 
+    opacity: 0.95;
+    transform: rotate(-10deg); 
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: drop-shadow(0px 0px 35px rgba(0, 160, 255, 0.9)); 
+    z-index: 5; 
+}
+
+.test-butterfly:hover {
+    transform: rotate(-1deg) scale(1.15);
+    filter: drop-shadow(0px 0px 45px rgba(0, 160, 255, 1));
+}
+
+.test-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1100px; 
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative; 
+    z-index: 2; 
+}
+
+.test-main-title {
+    font-size: 2.8rem;
+    font-family: 'Alice', serif;
+    color: white;
+    text-align: center;
+    margin-top: 45px; 
+    margin-bottom: 70px; 
+    text-shadow: 0 0 25px rgba(30, 64, 175, 0.7); 
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
+    gap: 60px; 
+}
+
+.bouncing-gem {
+    width: 150px; 
+    height: auto;
+    filter: drop-shadow(0 0 35px rgba(16, 185, 129, 0.8)); 
+    animation: bounce 0.8s infinite alternate cubic-bezier(0.5, 0.05, 1, 0.5);
+}
+
+.gem-title {
+    margin: 0;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); 
+    animation: pulse-text 1.5s infinite alternate; 
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(40px); } 
+}
+
+@keyframes pulse-text {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .test-page-wrapper { 
+        padding-top: 80px; 
+        background-image: 
+            radial-gradient(circle at top right, rgba(130, 70, 255, 0.25) 0%, transparent 350px),
+            radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.25) 0%, transparent 350px);
+    }
+    
+    .test-main-title { 
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-bottom: 40px; 
+    }
+    
+    .test-butterfly {
+        width: 70px; 
+        top: 90px;
+        left: 2%; 
+    }
+}

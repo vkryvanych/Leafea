@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header/Header';
 import './ScrollBackground.css';
 
@@ -10,6 +11,7 @@ import m_el3 from '../../assets/m_el3.png';
 
 function ScrollBackground() {
     const ref = useRef(null);
+    
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ["start start", "end start"]
@@ -35,7 +37,7 @@ function ScrollBackground() {
             <motion.div style={{ y: yText, zIndex: 2 }} className="hero-content-overlay">
                 <h1 className='leaf-text'>Leafea</h1>
                 <p className="sub-text">Твоя рекомендаційна система</p>
-                <button className="start-btn">Почати</button>
+                <Link to="/test" className="start-btn">Почати</Link>
             </motion.div>
         
             <motion.div

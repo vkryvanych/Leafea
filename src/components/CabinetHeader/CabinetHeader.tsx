@@ -66,11 +66,30 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, []);
+
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        try {
+            logout(); 
+            window.location.href = '/'; 
+        } catch (error) {
+            console.error(error);
+            window.location.href = '/'; 
+        }
+    };
+
+    const handleCancelLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsConfirmingLogout(false);
+    };
 
     const handleGoToTest = () => {
         setIsAddMenuOpen(false); 
@@ -98,13 +117,15 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
         setIsConfirmingLogout(false);
     };
 
-    const toggleProfileMenu = () => {
+    const toggleProfileMenu = (e: React.MouseEvent) => {
+        e.stopPropagation();
         setIsProfileMenuOpen(!isProfileMenuOpen);
         setIsConfirmingLogout(false);
         setIsChoosingAvatar(false);
     };
 
-    const toggleMobileMenu = () => {
+    const toggleMobileMenu = (e: React.MouseEvent) => {
+        e.stopPropagation();
         setIsMobileMenuOpen(!isMobileMenuOpen);
         setIsConfirmingLogout(false);
         setIsChoosingAvatar(false);
@@ -115,27 +136,28 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
             
             <div className="cabinet-logo-container" ref={menuRef}>
                 <button 
+                    type="button"
                     className="cabinet-add-btn"
-                    onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
+                    onClick={(e) => { e.stopPropagation(); setIsAddMenuOpen(!isAddMenuOpen); }}
                     title="Додати рекомендацію"
                 >
                     +
                 </button>
 
                 {isAddMenuOpen && (
-                    <div className="cabinet-dropdown">
-                        <button onClick={handleOpenModal}>Додати рекомендацію вручну</button>
-                        <button onClick={handleGoToTest}>Перейти до тесту</button>
+                    <div className="cabinet-dropdown" onClick={(e) => e.stopPropagation()}>
+                        <button type="button" onClick={handleOpenModal}>Додати рекомендацію вручну</button>
+                        <button type="button" onClick={handleGoToTest}>Перейти до тесту</button>
                     </div>
                 )}
             </div>
 
             <nav className="cabinet-nav-links desktop-only">
                 <Link to="/" className="nav-item">На головну</Link>
-                <button className={`nav-item ${activeTab === 'all' ? 'active' : ''}`} onClick={() => setActiveTab('all')}>Всі рекомендації</button>
-                <button className={`nav-item ${activeTab === 'inProgress' ? 'active' : ''}`} onClick={() => setActiveTab('inProgress')}>В процесі</button>
-                <button className={`nav-item ${activeTab === 'watched' ? 'active' : ''}`} onClick={() => setActiveTab('watched')}>Переглянуто</button>
-                <button className={`nav-item ${activeTab === 'quotes' ? 'active' : ''}`} onClick={() => setActiveTab('quotes')}>Цитати</button>
+                <button type="button" className={`nav-item ${activeTab === 'all' ? 'active' : ''}`} onClick={() => setActiveTab('all')}>Всі рекомендації</button>
+                <button type="button" className={`nav-item ${activeTab === 'inProgress' ? 'active' : ''}`} onClick={() => setActiveTab('inProgress')}>В процесі</button>
+                <button type="button" className={`nav-item ${activeTab === 'watched' ? 'active' : ''}`} onClick={() => setActiveTab('watched')}>Переглянуто</button>
+                <button type="button" className={`nav-item ${activeTab === 'quotes' ? 'active' : ''}`} onClick={() => setActiveTab('quotes')}>Цитати</button>
             </nav>
 
             <div 
@@ -155,8 +177,8 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                     <div className="cabinet-dropdown profile-dropdown" onClick={(e) => e.stopPropagation()}>
                         {!isChoosingAvatar && !isConfirmingLogout && (
                             <>
-                                <button onClick={() => setIsChoosingAvatar(true)}>Змінити аватарку</button>
-                                <button className="logout-btn" onClick={() => setIsConfirmingLogout(true)}>Вийти з акаунту</button>
+                                <button type="button" onClick={() => setIsChoosingAvatar(true)}>Змінити аватарку</button>
+                                <button type="button" className="logout-btn" onClick={(e) => { e.stopPropagation(); setIsConfirmingLogout(true); }}>Вийти з акаунту</button>
                             </>
                         )}
                         
@@ -164,8 +186,8 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                             <div className="logout-confirm-container">
                                 <p className="logout-confirm-title">Ви впевнені?</p>
                                 <div className="logout-confirm-buttons">
-                                    <button className="confirm-yes-btn" onClick={logout}>Так</button>
-                                    <button className="confirm-no-btn" onClick={() => setIsConfirmingLogout(false)}>Ні</button>
+                                    <button type="button" className="confirm-yes-btn" onClick={handleLogout}>Так</button>
+                                    <button type="button" className="confirm-no-btn" onClick={handleCancelLogout}>Ні</button>
                                 </div>
                             </div>
                         )}
@@ -181,7 +203,7 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                                         />
                                     ))}
                                 </div>
-                                <button className="back-btn" onClick={() => setIsChoosingAvatar(false)}>Назад</button>
+                                <button type="button" className="back-btn" onClick={() => setIsChoosingAvatar(false)}>Назад</button>
                             </div>
                         )}
                     </div>
@@ -201,17 +223,17 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                         {!isChoosingAvatar && !isConfirmingLogout && (
                             <>
                                 <p className="mobile-section-title">Вкладки</p>
-                                <button className={activeTab === 'all' ? 'active' : ''} onClick={() => handleMobileTabClick('all')}>Всі рекомендації</button>
-                                <button className={activeTab === 'inProgress' ? 'active' : ''} onClick={() => handleMobileTabClick('inProgress')}>В процесі</button>
-                                <button className={activeTab === 'watched' ? 'active' : ''} onClick={() => handleMobileTabClick('watched')}>Переглянуто</button>
-                                <button className={activeTab === 'quotes' ? 'active' : ''} onClick={() => handleMobileTabClick('quotes')}>Цитати</button>
+                                <button type="button" className={activeTab === 'all' ? 'active' : ''} onClick={() => handleMobileTabClick('all')}>Всі рекомендації</button>
+                                <button type="button" className={activeTab === 'inProgress' ? 'active' : ''} onClick={() => handleMobileTabClick('inProgress')}>В процесі</button>
+                                <button type="button" className={activeTab === 'watched' ? 'active' : ''} onClick={() => handleMobileTabClick('watched')}>Переглянуто</button>
+                                <button type="button" className={activeTab === 'quotes' ? 'active' : ''} onClick={() => handleMobileTabClick('quotes')}>Цитати</button>
                                 <Link to="/" className="nav-item-mobile">На головну</Link>
                                 
                                 <div className="mobile-dropdown-divider"></div>
                                 
                                 <p className="mobile-section-title">Профіль</p>
-                                <button onClick={() => setIsChoosingAvatar(true)}>Змінити аватарку</button>
-                                <button className="logout-btn" onClick={() => setIsConfirmingLogout(true)}>Вийти з акаунту</button>
+                                <button type="button" onClick={() => setIsChoosingAvatar(true)}>Змінити аватарку</button>
+                                <button type="button" className="logout-btn" onClick={(e) => { e.stopPropagation(); setIsConfirmingLogout(true); }}>Вийти з акаунту</button>
                             </>
                         )}
                         
@@ -219,8 +241,8 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                             <div className="logout-confirm-container">
                                 <p className="logout-confirm-title">Ви впевнені?</p>
                                 <div className="logout-confirm-buttons">
-                                    <button className="confirm-yes-btn" onClick={logout}>Так</button>
-                                    <button className="confirm-no-btn" onClick={() => setIsConfirmingLogout(false)}>Ні</button>
+                                    <button type="button" className="confirm-yes-btn" onClick={handleLogout}>Так</button>
+                                    <button type="button" className="confirm-no-btn" onClick={handleCancelLogout}>Ні</button>
                                 </div>
                             </div>
                         )}
@@ -236,7 +258,7 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
                                         />
                                     ))}
                                 </div>
-                                <button className="back-btn" onClick={() => setIsChoosingAvatar(false)}>Назад</button>
+                                <button type="button" className="back-btn" onClick={() => setIsChoosingAvatar(false)}>Назад</button>
                             </div>
                         )}
                     </div>
