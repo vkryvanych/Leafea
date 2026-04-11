@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'; 
+import { useLocation } from 'react-router-dom'; 
 import { useCabinetData } from '../../hooks/useCabinetData';
 import CabinetHeader from '../../components/CabinetHeader/CabinetHeader';
 import UserStatistics from '../../components/UserStatistics/UserStatistics';
@@ -16,6 +17,7 @@ import './Cabinet.css';
 
 function Cabinet() {
     const { userData, loading } = useCabinetData();
+    const location = useLocation(); 
     const [activeTab, setActiveTab] = useState('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [localItems, setLocalItems] = useState<any[]>([]);
@@ -28,6 +30,13 @@ function Cabinet() {
     const [isEditQuoteModalOpen, setIsEditQuoteModalOpen] = useState(false);
     const [editingQuote, setEditingQuote] = useState<{itemId: number, quoteId: string, text: string} | null>(null);
     const [quoteFilterItemId, setQuoteFilterItemId] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (location.state && (location.state as any).activeTab) {
+            setActiveTab((location.state as any).activeTab);
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     useEffect(() => {
         const savedData = localStorage.getItem('myLeafeaCards');
@@ -278,7 +287,10 @@ function Cabinet() {
                             <div className="recent-items-section">
                                 <h2 className="recent-title"><img src={star} alt="star" className="star-icon" /> Нещодавно додане</h2>
                                 <div className="saved-items-list">
-                                    {localItems.filter(item => item.status === 'planned').map((item: any) => (
+                                    {localItems
+                                        .filter(item => item.status === 'planned')
+                                        .sort((a, b) => Number(b.id) - Number(a.id))
+                                        .map((item: any) => (
                                         <CabinetCard 
                                             key={item.id} id={item.id} title={item.title} description={item.description || item.genres || 'Немає опису'} 
                                             image={item.image} category={item.category} onDelete={handleDeleteItem} onStart={handleStartItem} 
@@ -297,6 +309,7 @@ function Cabinet() {
                             {localItems
                                 .filter(item => item.status === 'inProgress')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                                .sort((a, b) => Number(b.id) - Number(a.id))
                                 .map((item: any) => (
                                     <InProgressCard 
                                         key={item.id} id={item.id} title={item.title} image={item.image}
@@ -321,6 +334,7 @@ function Cabinet() {
                             {localItems
                                 .filter(item => item.status === 'watched')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                                .sort((a, b) => Number(b.id) - Number(a.id))
                                 .map((item: any) => (
                                     <WatchedCard 
                                         key={item.id} id={item.id} title={item.title} image={item.image}
