@@ -135,7 +135,7 @@ export const mockAnimeRecommendations: RecommendationData[] = [
             { label: 'Епізоди', value: '94 серії' }
         ],
         galleryTitle: 'Кадри з аніме',
-        galleryImages: ['https://i.pinimg.com/736x/de/3f/41/de3f41780849c2c5a472918fcc9be2ec.jpg']
+        galleryImages: ['https://i.pinimg.com/736x/de/3f/41/de3f41780849c2c5a472918fcc9be2ec.jpg', 'https://upload.wikimedia.org/wikipedia/en/9/9b/Wangan_Midnight_1.png', 'https://i1.sndcdn.com/artworks-zEAFMfy6y61VQlnj-17uwKg-t500x500.jpg', 'https://i.ytimg.com/vi/Onpx9bTR-xU/maxresdefault.jpg']
     },
     {
         id: 'death-note',

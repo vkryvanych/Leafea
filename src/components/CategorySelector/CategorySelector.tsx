@@ -1,5 +1,5 @@
 import tw_test from '../../assets/tw_test.jpeg'; 
-import serial_test from '../../assets/serial_test.jpeg';
+import serial_test from '../../assets/serial_test.png';
 import anime1_test from '../../assets/anime1_test.jpeg';
 import book_test from '../../assets/book_test.jpg';
 import './CategorySelector.css';

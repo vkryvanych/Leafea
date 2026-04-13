@@ -136,8 +136,54 @@
 }
 
 @media (max-width: 768px) {
-    .test-question-title { font-size: 1.6rem; }
-    .grid-2-cols { grid-template-columns: 1fr; }
-    .option-btn { padding: 12px 15px; }
-    .test-navigation { margin-top: 40px; }
+    .test-progress-bar { 
+        height: 6px;
+        max-width: 285px; 
+        margin-bottom: 35px; 
+    }
+
+    .test-question-title { 
+        font-size: 1.6rem; 
+        margin-bottom: 35px;
+    }
+
+    .grid-2-cols { 
+        grid-template-columns: 1fr; 
+    }
+    
+    .options-container {
+        gap: 10px; 
+    }
+
+    .option-btn { 
+        padding: 10px 14px; 
+        gap: 12px; 
+        border-radius: 10px;
+    }
+    
+    .custom-checkbox {
+        width: 18px; 
+        height: 18px;
+    }
+
+    .option-btn.selected .custom-checkbox::after {
+        font-size: 12px; 
+    }
+
+    .option-text {
+        font-size: 0.95rem;
+    }
+
+    .test-navigation { 
+        margin-top: 25px; 
+    }
+
+    .test-back-btn {
+        font-size: 1rem;
+    }
+
+    .test-nav-btn {
+        padding: 8px 25px; 
+        font-size: 1rem;
+    }
 }
