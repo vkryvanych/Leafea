@@ -1,15 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth'; 
-import type { SyntheticEvent } from 'react';
 import './LoginForm.css';
 
 function LoginForm() {
-    
-    const { login } = useAuth();
-    const handleLogin = (e: SyntheticEvent) => {
-        e.preventDefault(); 
-        login();
-    };
+    const { login, isLoading, error } = useAuth();
 
     return (
         <div className="auth-form-content">
@@ -22,19 +16,21 @@ function LoginForm() {
                 </Link>
             </p>
 
-    
-            <form className="auth-form" onSubmit={handleLogin}>
+            <form className="auth-form" onSubmit={login}>
                 <div className="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="Введіть ваш емайл" required />
+                    <input name="email" type="email" placeholder="Введіть ваш емайл" required />
                 </div>
 
                 <div className="input-group">
                     <label>Пароль</label>
-                    <input type="password" placeholder="Введіть пароль" required />
+                    <input name="password" type="password" placeholder="Введіть пароль" required />
                 </div>
-
-                <button type="submit" className="auth-submit-btn">Увійти</button>
+                {error && <div className="auth-error-message">{error}</div>}
+                
+                <button type="submit" className="auth-submit-btn" disabled={isLoading}>
+                    {isLoading ? 'Зачекайте...' : 'Увійти'}
+                </button>
             </form>
         </div>
     );

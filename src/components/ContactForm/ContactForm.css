@@ -1,4 +1,5 @@
 .contact-form {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -20,7 +21,6 @@
     color: white;
     font-family: 'Alata', sans-serif;
     font-size: 1.2rem; 
-    
     padding: 10px 0;
     outline: none;
     transition: border-color 0.3s ease;
@@ -40,6 +40,25 @@
     border-bottom: 1px solid #8246FF; 
 }
 
+.contact-form textarea::-webkit-scrollbar {
+    width: 6px; 
+}
+
+.contact-form textarea::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05); 
+    border-radius: 4px;
+}
+
+.contact-form textarea::-webkit-scrollbar-thumb {
+    background: #8246FF; 
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(130, 70, 255, 0.8); 
+}
+
+.contact-form textarea::-webkit-scrollbar-thumb:hover {
+    background: #9d6cff; 
+}
+
 .form-submit-wrapper {
     display: flex;
     justify-content: flex-end;
@@ -57,9 +76,76 @@
     transform: translateX(10px); 
 }
 
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover, 
+.contact-form input:-webkit-autofill:focus, 
+.contact-form input:-webkit-autofill:active,
+.contact-form textarea:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white !important; 
+    caret-color: white;
+}
+
+.contact-success-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    min-height: 250px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.contact-success-message h3 {
+    font-family: 'Alata', serif;
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.contact-success-message p {
+    font-family: 'Alata', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.5rem;
+}
+
+.error-message {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    color: #ff4c4c;
+    font-family: 'Alata', sans-serif;
+    font-size: 1.1rem;
+    margin: 0; 
+}
+
 @media (max-width: 900px) {
     .form-row.split {
         grid-template-columns: 1fr;
         gap: 40px;
+    }
+    
+    .contact-success-message {
+        min-height: 150px;
+        margin-top: -50px;
+        margin-bottom: 40px;
+        padding: 0;
+    }
+    
+    .contact-success-message h3 {
+        font-size: 1.7rem; 
+        margin-bottom: 10px;
+    }
+    
+    .contact-success-message p {
+        font-size: 1rem; 
+    }
+
+    .error-message {
+        font-size: 0.9rem;
+        bottom: 25px; 
+        line-height: 1.4;
+        padding-right: 40px; 
     }
 }

@@ -66,6 +66,24 @@
     color: white;
 }
 
+.auth-form-box input:-webkit-autofill,
+.auth-form-box input:-webkit-autofill:hover, 
+.auth-form-box input:-webkit-autofill:focus, 
+.auth-form-box input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white; 
+    caret-color: white;
+    background-color: transparent;
+}
+
+.auth-error-message {
+    color: #ff4c4c;
+    font-family: 'Alata', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
 @media (max-width: 800px) {
     .auth-page-wrapper {
         padding: 120px 5% 100px 5%; 
