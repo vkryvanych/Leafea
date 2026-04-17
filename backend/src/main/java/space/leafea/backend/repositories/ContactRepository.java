@@ -1,5 +1,7 @@
 package space.leafea.backend.repositories;
 
-public class ContactRepository {
-    
+import org.springframework.data.mongodb.repository.MongoRepository;
+import space.leafea.backend.models.ContactMessage;
+
+public interface ContactRepository extends MongoRepository<ContactMessage, String> {
 }

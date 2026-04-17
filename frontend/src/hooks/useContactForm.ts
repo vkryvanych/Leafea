@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 export const useContactForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -12,16 +13,16 @@ export const useContactForm = () => {
         setIsSuccess(false);
 
         const formData = new FormData(e.currentTarget);
-        const name = formData.get('name') as string;
-        const email = formData.get('email') as string;
-        const phone = formData.get('phone') as string;
-        const message = formData.get('message') as string;
+        const contactData = {
+            name: formData.get('name') as string,
+            email: formData.get('email') as string,
+            phone: formData.get('phone') as string,
+            message: formData.get('message') as string,
+        };
 
         try {
-            console.log('Sending to backend:', { name, email, phone, message });
+            await axios.post('http://localhost:8080/api/contact/send', contactData);
 
-            await new Promise(resolve => setTimeout(resolve, 1500)); 
-            
             setIsSuccess(true);
             e.currentTarget.reset(); 
         } catch (err) {
