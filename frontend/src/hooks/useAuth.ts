@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import type { SyntheticEvent } from 'react';
 
 export const useAuth = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
     const login = async (e: SyntheticEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -14,18 +14,22 @@ export const useAuth = () => {
 
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const loginData = Object.fromEntries(formData);
 
         try {
-            console.log('Спроба логіну:', { email, password });
-        
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            localStorage.setItem('isLoggedIn', 'true');
+            const response = await axios.post('http://localhost:8080/api/auth/login', loginData);
+            
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userName', response.data.name);
+            localStorage.setItem('isLoggedIn', 'true'); 
+            
             navigate('/cabinet');
-        } catch (err) {
-            setError('Неправильний емайл або пароль! Спробуйте ще раз.');
+        } catch (err: any) {
+            if (err.response && err.response.status === 401) {
+                setError('Неправильний емайл або пароль! Спробуйте ще раз.');
+            } else {
+                setError('Проблема зі з\'єднанням. Перевірте, чи запущений бекенд.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -38,28 +42,34 @@ export const useAuth = () => {
 
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const registerData = Object.fromEntries(formData);
 
         try {
-            console.log('Спроба реєстрації:', { name, email, password });
+            await axios.post('http://localhost:8080/api/auth/register', registerData);
             
-            await new Promise(resolve => setTimeout(resolve, 1000));
-           
-            localStorage.setItem('isLoggedIn', 'true');
-            navigate('/cabinet');
-        } catch (err) {
-            setError('Сталася помилка! Можливо, такий емайл вже існує.');
+            navigate('/auth/login'); 
+        } catch (err: any) {
+            if (err.response && err.response.status === 400) {
+                setError('Такий емайл вже використовується!');
+            } else {
+                setError('Сталася помилка при реєстрації. Спробуйте пізніше.');
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
     const logout = () => {
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
+        
         navigate('/'); 
     };
 
-    return { login, register, logout, isLoading, error };
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    return { login, register, logout, isLoading, error, isLoggedIn };
 };

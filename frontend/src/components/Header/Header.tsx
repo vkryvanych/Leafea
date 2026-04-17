@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import './Header.css';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import logo from '../../assets/logo.png';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; 
+import './Header.css';
 
 function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const closeMenu = () => setMenuOpen(false);
-
+   
+    useLocation(); 
+    
     const { isLoggedIn } = useAuth(); 
+
+    const closeMenu = () => setMenuOpen(false);
 
     return (
         <header className="navbar">
@@ -37,7 +40,6 @@ function Header() {
       
                     <div className="mobile-auth-section">
                         {isLoggedIn ? (
-                            
                             <Link to="/cabinet" className="btn-cabinet" onClick={closeMenu}>Особистий кабінет</Link>
                         ) : (
                             <>
