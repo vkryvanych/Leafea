@@ -11,30 +11,30 @@ import book_def from '../../assets/book_def.jpg';
 import serial_def from '../../assets/serial_def.jpg';
 
 interface InProgressCardProps {
-    id: number; 
+    id: number | string; 
     title: string;
     image: string;
     category: 'movie' | 'series' | 'anime' | 'book';
     creator?: string; 
     genres?: string;
     startDate?: string;
-    totalPages?: number;
-    currentPage?: number;
-    onDelete: (id: number) => void; 
-    onUpdateProgress?: (id: number, newProgress: number) => void; 
-    onMarkAsWatched?: (id: number) => void; 
-    onOpenAddQuote?: (id: number) => void; 
+    totalAmount?: number; 
+    currentProgress?: number; 
+    onDelete: (id: number | string) => void; 
+    onUpdateProgress?: (id: number | string, newProgress: number) => void; 
+    onMarkAsWatched?: (id: number | string) => void; 
+    onOpenAddQuote?: (id: number | string) => void; 
 }
 
 function InProgressCard({ 
     id, title, image, category, creator, genres, startDate, 
-    totalPages = 0, currentPage = 0, onDelete, onUpdateProgress, onMarkAsWatched, onOpenAddQuote 
+    totalAmount = 0, currentProgress = 0, onDelete, onUpdateProgress, onMarkAsWatched, onOpenAddQuote 
 }: InProgressCardProps) {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [showConfirmMenu, setShowConfirmMenu] = useState(false); 
     
     const [showProgressMenu, setShowProgressMenu] = useState(false);
-    const [tempProgress, setTempProgress] = useState<number | string>(currentPage);
+    const [tempProgress, setTempProgress] = useState<number | string>(currentProgress);
 
     const menuRef = useRef<HTMLDivElement>(null);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,7 +48,7 @@ function InProgressCard({
     };
     const currentImage = image || defaultPosters[category];
 
-    const progressPercent = totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
+    const progressPercent = totalAmount > 0 ? Math.round((currentProgress / totalAmount) * 100) : 0;
     const showProgress = category !== 'movie'; 
 
     useEffect(() => {
@@ -129,8 +129,8 @@ function InProgressCard({
                     {showProgress && (
                         <div className="progress-section">
                             <div className="progress-header">
-                                <span className="progress-label">{category === 'book' ? 'Кількість сторінок' : 'Серії'}</span>
-                                <span className="progress-numbers">{currentPage}/{totalPages}</span>
+                                <span className="progress-label">{category === 'book' ? 'Кількість сторінок' : 'Епізоди'}</span>
+                                <span className="progress-numbers">{currentProgress}/{totalAmount}</span>
                             </div>
                             <div className="progress-track">
                                 <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
@@ -154,7 +154,7 @@ function InProgressCard({
                                     if (category === 'movie') {
                                         if (onMarkAsWatched) onMarkAsWatched(id);
                                     } else {
-                                        setTempProgress(currentPage);
+                                        setTempProgress(currentProgress);
                                         setShowProgressMenu(!showProgressMenu);
                                     }
                                 }}
@@ -173,7 +173,7 @@ function InProgressCard({
                                         className="progress-input"
                                         value={tempProgress}
                                         min="0"
-                                        max={totalPages}
+                                        max={totalAmount} 
                                         onChange={(e) => {
                                             const val = e.target.value;
                                             if (val === '') {
@@ -181,13 +181,14 @@ function InProgressCard({
                                                 return;
                                             }
                                             let num = parseInt(val, 10);
-                                            if (totalPages && totalPages > 0 && num > totalPages) {
-                                                num = totalPages;
+                                            if (totalAmount && totalAmount > 0 && num > totalAmount) {
+                                                num = totalAmount; 
                                             }
                                             if (num < 0) num = 0;
                                             
                                             setTempProgress(num);
                                         }}
+                                        onWheel={(e) => e.currentTarget.blur()} 
                                     />
                                     <div className="progress-buttons-container">
                                         <button 

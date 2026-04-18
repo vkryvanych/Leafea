@@ -31,8 +31,15 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
     const [isChoosingAvatar, setIsChoosingAvatar] = useState(false); 
     const [isConfirmingLogout, setIsConfirmingLogout] = useState(false);
     
+    const predefinedAvatars = [
+        girl2_ava, girl1_ava, cat1_ava, angel_ava, girl4_ava, butterfly_ava,
+        girl3_ava, asa_ava, angel2_ava, man_ava, rise_ava, cat2_ava
+    ];
+
     const [currentAvatar, setCurrentAvatar] = useState(() => {
-        return localStorage.getItem('userAvatar') || userData.avatar;
+        const uniqueStorageKey = `userAvatar_${userData.name}`;
+        const savedAvatar = localStorage.getItem(uniqueStorageKey);
+        return savedAvatar || predefinedAvatars[0];
     });
 
     const navigate = useNavigate(); 
@@ -41,11 +48,6 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
     const menuRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null); 
     const mobileMenuRef = useRef<HTMLDivElement>(null);
-    
-    const predefinedAvatars = [
-        girl2_ava, girl1_ava, cat1_ava, angel_ava, girl4_ava, butterfly_ava,
-        girl3_ava, asa_ava, angel2_ava, man_ava, rise_ava, cat2_ava
-    ];
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -103,7 +105,7 @@ function CabinetHeader({ userData, activeTab, setActiveTab, onOpenAddModal }: Ca
 
     const handleAvatarSelect = (ava: string) => {
         setCurrentAvatar(ava);
-        localStorage.setItem('userAvatar', ava);
+        localStorage.setItem(`userAvatar_${userData.name}`, ava);
         
         setIsChoosingAvatar(false);
         setIsProfileMenuOpen(false);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'; 
 import { useLocation } from 'react-router-dom'; 
+import axios from 'axios';
 import { useCabinetData } from '../../hooks/useCabinetData';
 import CabinetHeader from '../../components/CabinetHeader/CabinetHeader';
 import UserStatistics from '../../components/UserStatistics/UserStatistics';
@@ -16,11 +17,10 @@ import emerald from '../../assets/emerald.png';
 import './Cabinet.css';
 
 function Cabinet() {
-    const { userData, loading } = useCabinetData();
+    const { userData, loading, localItems, setLocalItems } = useCabinetData();
     const location = useLocation(); 
     const [activeTab, setActiveTab] = useState('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [localItems, setLocalItems] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -28,8 +28,13 @@ function Cabinet() {
     const [activeQuoteTab, setActiveQuoteTab] = useState<'all' | 'favorites'>('all');
 
     const [isEditQuoteModalOpen, setIsEditQuoteModalOpen] = useState(false);
-    const [editingQuote, setEditingQuote] = useState<{itemId: number, quoteId: string, text: string} | null>(null);
-    const [quoteFilterItemId, setQuoteFilterItemId] = useState<number | null>(null);
+    const [editingQuote, setEditingQuote] = useState<{itemId: string | number, quoteId: string, text: string} | null>(null);
+    const [quoteFilterItemId, setQuoteFilterItemId] = useState<string | number | null>(null);
+
+    const API_URL = 'http://localhost:8080/api/cabinet';
+    const getConfig = () => ({
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
 
     useEffect(() => {
         if (location.state && (location.state as any).activeTab) {
@@ -39,89 +44,92 @@ function Cabinet() {
     }, [location]);
 
     useEffect(() => {
-        const savedData = localStorage.getItem('myLeafeaCards');
-        if (savedData) {
-            setLocalItems(JSON.parse(savedData));
-        } else {
-            setLocalItems([]);
-            localStorage.setItem('myLeafeaCards', JSON.stringify([]));
-        }
-    }, []); 
-
-    useEffect(() => {
         if (activeTab !== 'quotes') {
             setQuoteFilterItemId(null);
         }
     }, [activeTab]);
 
-    const handleAddNewItem = (newItem: any) => {
-        const updatedItems = [newItem, ...localItems];
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleAddNewItem = async (newItem: any) => {
+        try {
+            delete newItem.id; 
+            const response = await axios.post(API_URL, newItem, getConfig());
+            setLocalItems([response.data, ...localItems]);
+        } catch (error) {
+            console.error("Помилка при створенні:", error);
+        }
     };
 
-    const handleDeleteItem = (idToDelete: number) => {
-        const updatedItems = localItems.filter(item => item.id !== idToDelete);
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleDeleteItem = async (idToDelete: string | number) => {
+        try {
+            await axios.delete(`${API_URL}/${idToDelete}`, getConfig());
+            setLocalItems(localItems.filter(item => item.id !== idToDelete));
+        } catch (error) {
+            console.error("Помилка при видаленні:", error);
+        }
     };
 
-    const handleStartItem = (idToStart: number) => {
-        const today = new Date();
-        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-        const formattedDate = today.toLocaleDateString('uk-UA', options);
+    const handleStartItem = async (idToStart: string | number) => {
+        const itemToUpdate = localItems.find(item => item.id === idToStart);
+        if (!itemToUpdate) return;
 
-        const updatedItems = localItems.map(item => {
-            if (item.id === idToStart) {
-                return { ...item, status: 'inProgress', startDate: formattedDate };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
-        
-        setActiveTab('inProgress'); 
+        const formattedDate = new Date().toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+        const updatedItem = { ...itemToUpdate, status: 'inProgress', startDate: formattedDate };
+
+        try {
+            const response = await axios.put(`${API_URL}/${idToStart}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => item.id === idToStart ? response.data : item));
+            setActiveTab('inProgress'); 
+        } catch (error) {
+            console.error("Помилка при оновленні:", error);
+        }
     };
 
-    const handleUpdateProgress = (idToUpdate: number, newProgress: number) => {
-        const updatedItems = localItems.map(item => {
-            if (item.id === idToUpdate) {
-                const isFinished = item.category !== 'movie' && item.totalPages > 0 && newProgress >= item.totalPages;
-                return { 
-                    ...item, 
-                    currentPage: newProgress,
-                    status: isFinished ? 'watched' : item.status 
-                };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleUpdateProgress = async (idToUpdate: string | number, newProgress: number) => {
+        const itemToUpdate = localItems.find(item => item.id === idToUpdate);
+        if (!itemToUpdate) return;
+
+        const isFinished = itemToUpdate.category !== 'movie' && itemToUpdate.totalAmount > 0 && newProgress >= itemToUpdate.totalAmount;
+        const updatedItem = { 
+            ...itemToUpdate, 
+            currentProgress: newProgress,
+            status: isFinished ? 'watched' : itemToUpdate.status 
+        };
+
+        try {
+            const response = await axios.put(`${API_URL}/${idToUpdate}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => item.id === idToUpdate ? response.data : item));
+        } catch (error) {
+            console.error("Помилка оновлення прогресу:", error);
+        }
     };
 
-    const handleMarkAsWatched = (idToWatch: number) => {
-        const updatedItems = localItems.map(item => {
-            if (item.id === idToWatch) {
-                return { ...item, status: 'watched' };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleMarkAsWatched = async (idToWatch: string | number) => {
+        const itemToUpdate = localItems.find(item => item.id === idToWatch);
+        if (!itemToUpdate) return;
+
+        const updatedItem = { ...itemToUpdate, status: 'watched' };
+        try {
+            const response = await axios.put(`${API_URL}/${idToWatch}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => item.id === idToWatch ? response.data : item));
+        } catch (error) {
+            console.error("Помилка при оновленні статусу:", error);
+        }
     };
 
-    const handleUpdateWatchedDetails = (idToUpdate: number, rating: string, review: string) => {
-        const updatedItems = localItems.map(item => {
-            if (item.id === idToUpdate) {
-                return { ...item, rating, review };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleUpdateWatchedDetails = async (idToUpdate: string | number, rating: string, review: string) => {
+        const itemToUpdate = localItems.find(item => item.id === idToUpdate);
+        if (!itemToUpdate) return;
+
+        const updatedItem = { ...itemToUpdate, rating, review };
+        try {
+            const response = await axios.put(`${API_URL}/${idToUpdate}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => item.id === idToUpdate ? response.data : item));
+        } catch (error) {
+            console.error("Помилка при збереженні відгуку:", error);
+        }
     };
 
-    const handleOpenQuoteModal = (id: number) => {
+    const handleOpenQuoteModal = (id: string | number) => {
         const item = localItems.find(i => i.id === id);
         if (item) {
             setSelectedItemForQuote(item);
@@ -129,7 +137,7 @@ function Cabinet() {
         }
     };
 
-    const handleSaveQuote = (quoteText: string) => {
+    const handleSaveQuote = async (quoteText: string) => {
         if (!selectedItemForQuote) return;
 
         const newQuote = {
@@ -138,73 +146,84 @@ function Cabinet() {
             isFavorite: false 
         };
 
-        const updatedItems = localItems.map(item => {
-            if (item.id === selectedItemForQuote.id) {
-                const existingQuotes = item.quotes || [];
-                return { ...item, quotes: [newQuote, ...existingQuotes] };
-            }
-            return item;
-        });
+        const existingQuotes = selectedItemForQuote.quotes || [];
+        const updatedItem = { ...selectedItemForQuote, quotes: [newQuote, ...existingQuotes] };
 
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
-        setActiveTab('quotes');
-        setActiveQuoteTab('all'); 
+        try {
+            const response = await axios.put(`${API_URL}/${selectedItemForQuote.id}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => item.id === selectedItemForQuote.id ? response.data : item));
+            setActiveTab('quotes');
+            setActiveQuoteTab('all'); 
+        } catch (error) {
+            console.error("Помилка збереження цитати:", error);
+        }
     };
 
-    const handleToggleFavoriteQuote = (itemId: number, quoteId: string) => {
-        const updatedItems = localItems.map(item => {
-            if (item.id === itemId && item.quotes) {
-                const updatedQuotes = item.quotes.map((q: any) => 
-                    q.id === quoteId ? { ...q, isFavorite: !q.isFavorite } : q
-                );
-                return { ...item, quotes: updatedQuotes };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+    const handleToggleFavoriteQuote = async (itemId: string | number, quoteId: string) => {
+        const itemToUpdate = localItems.find(item => String(item.id) === String(itemId));
+        if (!itemToUpdate) return;
+
+        const updatedQuotes = (itemToUpdate.quotes || []).map((q: any) => 
+            String(q.id) === String(quoteId) ? { ...q, isFavorite: !q.isFavorite } : q
+        );
+        const updatedItem = { ...itemToUpdate, quotes: updatedQuotes };
+
+        try {
+            const response = await axios.put(`${API_URL}/${itemId}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => String(item.id) === String(itemId) ? response.data : item));
+        } catch (error) {
+            console.error("Помилка оновлення цитати:", error);
+        }
     };
 
-    const handleOpenEditQuote = (itemId: number, quoteId: string) => {
-        const item = localItems.find(i => i.id === itemId);
-        const quote = item?.quotes?.find((q: any) => q.id === quoteId);
+    const handleOpenEditQuote = (itemId: string | number, quoteId: string) => {
+        const item = localItems.find(i => String(i.id) === String(itemId));
+        const quote = item?.quotes?.find((q: any) => String(q.id) === String(quoteId));
         if (quote) {
             setEditingQuote({ itemId, quoteId, text: quote.text });
             setIsEditQuoteModalOpen(true);
         }
     };
 
-    const handleSaveEditedQuote = (newText: string) => {
+    const handleSaveEditedQuote = async (newText: string) => {
         if (!editingQuote) return;
-        const updatedItems = localItems.map(item => {
-            if (item.id === editingQuote.itemId) {
-                const updatedQuotes = item.quotes.map((q: any) => 
-                    q.id === editingQuote.quoteId ? { ...q, text: newText } : q
-                );
-                return { ...item, quotes: updatedQuotes };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
+      
+        const itemToUpdate = localItems.find(item => String(item.id) === String(editingQuote.itemId));
+        if (!itemToUpdate) return;
+
+        const updatedQuotes = itemToUpdate.quotes.map((q: any) => 
+            String(q.id) === String(editingQuote.quoteId) ? { ...q, text: newText } : q
+        );
+        const updatedItem = { ...itemToUpdate, quotes: updatedQuotes };
+
+        try {
+            const response = await axios.put(`${API_URL}/${editingQuote.itemId}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => String(item.id) === String(editingQuote.itemId) ? response.data : item));
+            setIsEditQuoteModalOpen(false);
+        } catch (error) {
+            console.error("Помилка редагування цитати:", error);
+        }
     };
 
-    const handleDeleteQuote = () => {
+    const handleDeleteQuote = async () => {
         if (!editingQuote) return;
-        const updatedItems = localItems.map(item => {
-            if (item.id === editingQuote.itemId) {
-                const updatedQuotes = item.quotes.filter((q: any) => q.id !== editingQuote.quoteId);
-                return { ...item, quotes: updatedQuotes };
-            }
-            return item;
-        });
-        setLocalItems(updatedItems);
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedItems));
-        setIsEditQuoteModalOpen(false);
+        
+        const itemToUpdate = localItems.find(item => String(item.id) === String(editingQuote.itemId));
+        if (!itemToUpdate) return;
+
+        const updatedQuotes = itemToUpdate.quotes.filter((q: any) => String(q.id) !== String(editingQuote.quoteId));
+        const updatedItem = { ...itemToUpdate, quotes: updatedQuotes };
+
+        try {
+            const response = await axios.put(`${API_URL}/${editingQuote.itemId}`, updatedItem, getConfig());
+            setLocalItems(localItems.map(item => String(item.id) === String(editingQuote.itemId) ? response.data : item));
+            setIsEditQuoteModalOpen(false);
+        } catch (error) {
+            console.error("Помилка видалення цитати:", error);
+        }
     };
 
-    const handleViewSpecificQuotes = (itemId: number) => {
+    const handleViewSpecificQuotes = (itemId: string | number) => {
         setQuoteFilterItemId(itemId); 
         setActiveQuoteTab('all');     
         setSearchQuery('');          
@@ -230,7 +249,7 @@ function Cabinet() {
     ).sort((a, b) => Number(b.id) - Number(a.id)); 
 
     const displayedQuotes = allQuotes
-        .filter(q => quoteFilterItemId ? q.itemId === quoteFilterItemId : true) 
+        .filter(q => quoteFilterItemId ? String(q.itemId) === String(quoteFilterItemId) : true) 
         .filter(q => activeQuoteTab === 'favorites' ? q.isFavorite : true)
         .filter(q => 
             q.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -239,7 +258,7 @@ function Cabinet() {
         );
 
     const filteredItemTitle = quoteFilterItemId 
-        ? localItems.find(i => i.id === quoteFilterItemId)?.title 
+        ? localItems.find(i => String(i.id) === String(quoteFilterItemId))?.title 
         : null;
 
     return (
@@ -289,7 +308,6 @@ function Cabinet() {
                                 <div className="saved-items-list">
                                     {localItems
                                         .filter(item => item.status === 'planned')
-                                        .sort((a, b) => Number(b.id) - Number(a.id))
                                         .map((item: any) => (
                                         <CabinetCard 
                                             key={item.id} id={item.id} title={item.title} description={item.description || item.genres || 'Немає опису'} 
@@ -309,12 +327,11 @@ function Cabinet() {
                             {localItems
                                 .filter(item => item.status === 'inProgress')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
-                                .sort((a, b) => Number(b.id) - Number(a.id))
                                 .map((item: any) => (
                                     <InProgressCard 
                                         key={item.id} id={item.id} title={item.title} image={item.image}
                                         category={item.category} creator={item.creator} genres={item.genres}
-                                        startDate={item.startDate} totalPages={item.totalPages} currentPage={item.currentPage || 0}
+                                        startDate={item.startDate} totalAmount={item.totalAmount} currentProgress={item.currentProgress || 0}
                                         onDelete={handleDeleteItem} onUpdateProgress={handleUpdateProgress} 
                                         onMarkAsWatched={handleMarkAsWatched} 
                                         onOpenAddQuote={handleOpenQuoteModal} 
@@ -334,7 +351,6 @@ function Cabinet() {
                             {localItems
                                 .filter(item => item.status === 'watched')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
-                                .sort((a, b) => Number(b.id) - Number(a.id))
                                 .map((item: any) => (
                                     <WatchedCard 
                                         key={item.id} id={item.id} title={item.title} image={item.image}

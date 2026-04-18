@@ -1,32 +1,51 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import girl2_ava from '../assets/girl2_ava.jpg'; 
-
-const MOCK_SAVED_ITEMS: any[] = [];
 
 export const useCabinetData = () => {
     const [userData, setUserData] = useState<any>(null);
+    const [localItems, setLocalItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            const stats = {
-                movies: MOCK_SAVED_ITEMS.filter(item => item.category === 'movie').length,
-                series: MOCK_SAVED_ITEMS.filter(item => item.category === 'series').length,
-                anime: MOCK_SAVED_ITEMS.filter(item => item.category === 'anime').length,
-                books: MOCK_SAVED_ITEMS.filter(item => item.category === 'book').length,
-            };
+        const fetchCabinetData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:8080/api/cabinet', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
 
-            setUserData({
-                name: "Вікторія",
-                avatar: girl2_ava,
-                stats: stats,
-                savedItems: MOCK_SAVED_ITEMS 
-            });
-            setLoading(false);
-        }, 800); 
+                const fetchedItems = response.data;
+                setLocalItems(fetchedItems); 
 
-        return () => clearTimeout(timer);
+                const stats = {
+                    movies: fetchedItems.filter((item: any) => item.category === 'movie').length,
+                    series: fetchedItems.filter((item: any) => item.category === 'series').length,
+                    anime: fetchedItems.filter((item: any) => item.category === 'anime').length,
+                    books: fetchedItems.filter((item: any) => item.category === 'book').length,
+                };
+
+                const storedName = localStorage.getItem('userName') || "Користувач";
+
+                setUserData({
+                    name: storedName,
+                    avatar: girl2_ava,
+                    stats: stats
+                });
+            } catch (error) {
+                console.error("Помилка завантаження кабінету:", error);
+                setUserData({
+                    name: localStorage.getItem('userName') || "Користувач",
+                    avatar: girl2_ava,
+                    stats: { movies: 0, series: 0, anime: 0, books: 0 }
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCabinetData();
     }, []);
 
-    return { userData, loading };
-};
+    return { userData, loading, localItems, setLocalItems };
+}; 

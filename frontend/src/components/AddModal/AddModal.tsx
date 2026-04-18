@@ -14,7 +14,7 @@ function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
     
     const [creator, setCreator] = useState(''); 
     const [selectedGenre, setSelectedGenre] = useState(''); 
-    const [totalPages, setTotalPages] = useState(''); 
+    const [totalAmount, setTotalAmount] = useState(''); 
 
     const availableGenres = [
         "Екшн", "Комедія", "Драма", "Фантастика", "Романтика", 
@@ -43,7 +43,7 @@ function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
             genres: selectedGenre, 
             status: 'planned', 
             
-            ...(category !== 'movie' ? { totalPages: Number(totalPages) || 0, currentPage: 0 } : {})
+            ...(category !== 'movie' ? { totalAmount: Number(totalAmount) || 0, currentProgress: 0 } : {})
         };
 
         onAdd(newItem); 
@@ -53,7 +53,7 @@ function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
         setImage('');
         setCreator('');
         setSelectedGenre(''); 
-        setTotalPages('');
+        setTotalAmount(''); 
         setCategory('movie');
     };
 
@@ -119,13 +119,14 @@ function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
 
                         {category !== 'movie' && (
                             <div className="form-group">
-                                <label>{category === 'book' ? 'Кількість сторінок' : 'Кількість серій'}</label>
+                                <label>{category === 'book' ? 'Кількість сторінок' : 'Кількість епізодів'}</label>
                                 <input 
                                     type="number" 
                                     min="1"
                                     placeholder={category === 'book' ? "Наприклад: 350" : "Наприклад: 24"} 
-                                    value={totalPages}
-                                    onChange={(e) => setTotalPages(e.target.value)}
+                                    value={totalAmount}
+                                    onChange={(e) => setTotalAmount(e.target.value)}
+                                    onWheel={(e) => e.currentTarget.blur()} 
                                     required
                                 />
                             </div>
