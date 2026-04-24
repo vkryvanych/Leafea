@@ -7,6 +7,7 @@ export const useAuth = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    
     const login = async (e: SyntheticEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -19,10 +20,27 @@ export const useAuth = () => {
         try {
             const response = await axios.post('http://localhost:8080/api/auth/login', loginData);
             
-            localStorage.setItem('token', response.data.token);
+            const token = response.data.token;
+            localStorage.setItem('token', token);
             localStorage.setItem('userName', response.data.name);
             localStorage.setItem('isLoggedIn', 'true'); 
             
+            const pendingCardString = localStorage.getItem('pendingRecommendation');
+            if (pendingCardString) {
+                try {
+                    const pendingCard = JSON.parse(pendingCardString);
+                    
+                    await axios.post('http://localhost:8080/api/cabinet', pendingCard, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    
+                    localStorage.removeItem('pendingRecommendation');
+                    console.log("Відкладена рекомендація успішно збережена!");
+                } catch (saveError) {
+                    console.error("Не вдалося зберегти відкладену рекомендацію", saveError);
+                }
+            }
+
             navigate('/cabinet');
         } catch (err: any) {
             if (err.response && err.response.status === 401) {
@@ -60,7 +78,6 @@ export const useAuth = () => {
     };
 
     const logout = () => {
-
         localStorage.removeItem('token');
         localStorage.removeItem('userName');
         localStorage.removeItem('isLoggedIn');

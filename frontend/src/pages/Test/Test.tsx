@@ -1,15 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios'; 
 import { useTestLogic } from '../../hooks/useTestLogic';
-import { testData } from '../../components/testData/testData';
 import CategorySelector from '../../components/CategorySelector/CategorySelector';
 import QuestionCard from '../../components/QuestionCard/QuestionCard';
 import RecommendationCard from '../../components/RecommendationCard/RecommendationCard'; 
-import { 
-    mockMovieRecommendations, 
-    mockBookRecommendations, 
-    mockSeriesRecommendations, 
-    mockAnimeRecommendations 
-} from '../../components/testData/mockRecommendation'; 
 import diamantImg from '../../assets/diamant.png'; 
 import butterflyImg from '../../assets/butter_test.png'; 
 import './Test.css';
@@ -17,17 +12,21 @@ import './Test.css';
 export default function Test() {
     const { 
         category, currentStep, answers, isLoading, isFinished, 
+        recommendation, noMatch, 
+        questions, isFetchingQuestions, 
         startTest, toggleAnswer, nextStep, prevStep, finishTest, resetTest 
     } = useTestLogic();
 
     return (
         <div className="test-page-wrapper">
-            {!isLoading && !isFinished && (
+            {!isLoading && !isFinished && !isFetchingQuestions && (
                 <img src={butterflyImg} alt="" className="test-butterfly" />
             )}
 
             {!category ? (
                 <CategorySelector onSelect={startTest} />
+            ) : isFetchingQuestions ? (
+                null
             ) : (
                 <TestFlow 
                     category={category} 
@@ -35,6 +34,9 @@ export default function Test() {
                     answers={answers} 
                     isLoading={isLoading} 
                     isFinished={isFinished}
+                    recommendation={recommendation} 
+                    noMatch={noMatch}   
+                    questions={questions} 
                     toggleAnswer={toggleAnswer} 
                     nextStep={nextStep} 
                     prevStep={prevStep} 
@@ -46,33 +48,33 @@ export default function Test() {
     );
 }
 
-function TestFlow({ category, currentStep, answers, isLoading, isFinished, toggleAnswer, nextStep, prevStep, finishTest, resetTest }: any) {
-    const questions = testData[category];
+function TestFlow({ 
+    category, currentStep, answers, isLoading, isFinished, 
+    recommendation, noMatch, questions, 
+    toggleAnswer, nextStep, prevStep, finishTest, resetTest 
+}: any) {
+    if (!questions || questions.length === 0) {
+        return null;
+    }
+
     const currentQuestion = questions[currentStep];
 
-    const [isFetchingNew, setIsFetchingNew] = useState(false);
-    const [recIndex, setRecIndex] = useState(0);
+    const [noMoreOptions, setNoMoreOptions] = useState(false);
+    
+    const navigate = useNavigate();
+    const API_URL = 'http://localhost:8080/api/cabinet';
 
     const handleAnotherOption = () => {
-        setIsFetchingNew(true);
-        setTimeout(() => {
-            setRecIndex((prevIndex: number) => prevIndex + 1);
-            setIsFetchingNew(false);
-        }, 1500); 
+        setNoMoreOptions(true);
     };
 
-    const handleSaveToCabinet = (data: any) => {
-        const savedData = localStorage.getItem('myLeafeaCards');
-        const currentCards = savedData ? JSON.parse(savedData) : [];
-
-        if (currentCards.some((item: any) => item.title === data.title)) return;
-
+    const handleSaveToCabinet = async (data: any) => {
         const findInDetails = (labelName: string) => {
-            return data.details.find((d: any) => d.label.toLowerCase().includes(labelName.toLowerCase()))?.value || '';
+            return data.details?.find((d: any) => d.label.toLowerCase().includes(labelName.toLowerCase()))?.value || '';
         };
 
         const checkLeftLabel = (labelName: string) => {
-            return data.bottomLeftLabel.toLowerCase().includes(labelName.toLowerCase()) ? data.bottomLeftText : '';
+            return data.bottomLeftLabel?.toLowerCase().includes(labelName.toLowerCase()) ? data.bottomLeftText : '';
         };
 
         let finalCreator = '';
@@ -84,8 +86,8 @@ function TestFlow({ category, currentStep, answers, isLoading, isFinished, toggl
             finalCreator = checkLeftLabel('студія') || findInDetails('студія');
         }
 
-        const getPageCount = () => {
-            const rawValue = findInDetails('сторінок') || findInDetails('епізоди') || findInDetails('серії') || findInDetails('сезон');
+        const getAmountCount = () => {
+            const rawValue = findInDetails('сторінок') || findInDetails('епізоди') || findInDetails('серії') || findInDetails('сезон') || '';
             const match = rawValue.match(/\d+/); 
             return match ? parseInt(match[0], 10) : 0;
         };
@@ -95,28 +97,46 @@ function TestFlow({ category, currentStep, answers, isLoading, isFinished, toggl
             : data.backgroundImage;
 
         const newCard = {
-            id: Date.now(),
             title: data.title,
-            description: data.description,
             image: posterImage, 
             category: category,
-            status: 'planned',
             creator: finalCreator,
-            genres: findInDetails('жанр'),
-            totalPages: getPageCount(),
-            currentPage: 0,
+            genres: findInDetails('жанр') || data.genres?.[0] || 'Невідомо',
+            status: 'planned',
+            totalAmount: getAmountCount(),
+            currentProgress: 0,
             quotes: []
         };
 
-        const updatedCards = [newCard, ...currentCards];
-        localStorage.setItem('myLeafeaCards', JSON.stringify(updatedCards));
+        const token = localStorage.getItem('token');
+        if (!token) {
+            localStorage.setItem('pendingRecommendation', JSON.stringify(newCard));
+            navigate('/auth/login'); 
+            return; 
+        }
+
+        const getConfig = () => ({
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        try {
+            await axios.post(API_URL, newCard, getConfig());
+            console.log("Успішно збережено!");
+        } catch (error) {
+            console.error("Помилка при збереженні з тесту:", error);
+        }
     };
 
-    if (isLoading || isFetchingNew) {
+    const handleReset = () => {
+        setNoMoreOptions(false);
+        resetTest();
+    };
+
+    if (isLoading) {
         return (
             <div className="test-step-container loader-container">
                 <h1 className="test-main-title gem-title">
-                    {isFetchingNew ? "Шукаємо інший варіант..." : "Аналізуємо твої відповіді..."}
+                    Аналізуємо твої відповіді...
                 </h1>
                 <img src={diamantImg} alt="Завантаження..." className="bouncing-gem" />
             </div>
@@ -124,24 +144,28 @@ function TestFlow({ category, currentStep, answers, isLoading, isFinished, toggl
     }
 
     if (isFinished) {
-        let currentArray;
-        switch (category) {
-            case 'book': currentArray = mockBookRecommendations; break;
-            case 'anime': currentArray = mockAnimeRecommendations; break;
-            case 'series': currentArray = mockSeriesRecommendations; break;
-            case 'movie':
-            default: currentArray = mockMovieRecommendations; break;
+        if (noMatch || noMoreOptions || !recommendation) {
+            return (
+                <div className="test-step-container result-step test-no-match-message">
+                    <h3>Упс. . . Нічого не знайдено</h3>
+                    <p>
+                        Здається, у нашій базі ще немає рекомендацій, які ідеально підходять під ці критерії, або інші варіанти закінчилися. 
+                        Спробуй змінити відповіді!
+                    </p>
+                    <button className="test-nav-btn" onClick={handleReset}>
+                        Пройти тест знову
+                    </button>
+                </div>
+            );
         }
-
-        const currentData = currentArray[recIndex % currentArray.length];
 
         return (
             <div className="test-step-container result-step">
                 <RecommendationCard 
-                    data={currentData} 
-                    onRestart={resetTest} 
+                    data={recommendation} 
+                    onRestart={handleReset} 
                     onAnotherOption={handleAnotherOption} 
-                    onSave={() => handleSaveToCabinet(currentData)} 
+                    onSave={() => handleSaveToCabinet(recommendation)} 
                 />
             </div>
         );
@@ -153,7 +177,7 @@ function TestFlow({ category, currentStep, answers, isLoading, isFinished, toggl
                 question={currentQuestion}
                 currentStep={currentStep}
                 totalSteps={questions.length}
-                selectedOptions={answers[currentQuestion.id] || []}
+                selectedOptions={answers[currentQuestion.questionId || currentQuestion.id] || []}
                 onToggle={toggleAnswer}
                 onNext={nextStep}
                 onPrev={prevStep}

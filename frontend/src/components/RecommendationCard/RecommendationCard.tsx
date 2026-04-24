@@ -29,26 +29,15 @@ export default function RecommendationCard({ data, onRestart, onAnotherOption, o
     }, []);
 
     useEffect(() => {
-        const savedData = localStorage.getItem('myLeafeaCards');
-        const currentCards = savedData ? JSON.parse(savedData) : [];
-        setIsSaved(currentCards.some((item: any) => item.title === data.title));
+        setIsSaved(false);
     }, [data.title]);
 
     const handleSaveClick = () => {
         if (isSaved) {
-            const savedData = localStorage.getItem('myLeafeaCards');
-            const currentCards = savedData ? JSON.parse(savedData) : [];
-            const existingCard = currentCards.find((item: any) => item.title === data.title);
-
-            let targetTab = 'all'; 
-            if (existingCard) {
-                if (existingCard.status === 'inProgress') targetTab = 'inProgress';
-                if (existingCard.status === 'watched') targetTab = 'watched';
-            }
-            navigate('/cabinet', { state: { activeTab: targetTab } });
+            navigate('/cabinet');
         } else {
             onSave();
-            setIsSaved(true);
+            setIsSaved(true); 
         }
         setIsMenuOpen(false);
     };
@@ -149,17 +138,21 @@ export default function RecommendationCard({ data, onRestart, onAnotherOption, o
                             
                             <div className="gallery-trigger mobile-only">
                                 <span className="rec-detail-label">{data.galleryTitle}</span>
-                                <div className="thumbnail-container" onClick={() => setSelectedImageIndex(0)} style={{ backgroundImage: `url(${data.galleryImages[0]})` }}>
-                                    <div className="play-icon">▶</div>
-                                </div>
+                                {data.galleryImages && data.galleryImages.length > 0 && (
+                                    <div className="thumbnail-container" onClick={() => setSelectedImageIndex(0)} style={{ backgroundImage: `url(${data.galleryImages[0]})` }}>
+                                        <div className="play-icon">▶</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         
                         <div className="gallery-trigger desktop-only">
                             <span className="rec-detail-label">{data.galleryTitle}</span>
-                            <div className="thumbnail-container" onClick={() => setSelectedImageIndex(0)} style={{ backgroundImage: `url(${data.galleryImages[0]})` }}>
-                                <div className="play-icon">▶</div>
-                            </div>
+                            {data.galleryImages && data.galleryImages.length > 0 && (
+                                <div className="thumbnail-container" onClick={() => setSelectedImageIndex(0)} style={{ backgroundImage: `url(${data.galleryImages[0]})` }}>
+                                    <div className="play-icon">▶</div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

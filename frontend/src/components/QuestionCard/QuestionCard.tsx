@@ -1,8 +1,16 @@
-import type { Question } from '../testData/testData';
 import './QuestionCard.css';
 
+export interface BackendQuestion {
+    id?: string;
+    questionId?: string;
+    title: string;
+    subtitle?: string;
+    type: 'single' | 'multiple';
+    options: string[];
+}
+
 interface Props {
-    question: Question;
+    question: BackendQuestion;
     currentStep: number;
     totalSteps: number;
     selectedOptions: string[];
@@ -18,9 +26,11 @@ export default function QuestionCard({
     onToggle, onNext, onPrev, onReset, onFinish 
 }: Props) {
     const isMultiple = question.type === 'multiple';
-    const canGoNext = selectedOptions.length > 0;
+    
+    const canGoNext = selectedOptions && selectedOptions.length > 0;
     const progressPercent = (currentStep / totalSteps) * 100;
     const isLastQuestion = currentStep === totalSteps - 1;
+    const activeId = question.questionId || question.id || '';
 
     return (
         <div className="test-step-container">
@@ -32,12 +42,12 @@ export default function QuestionCard({
 
             <div className={`options-container ${isMultiple ? 'grid-2-cols' : 'grid-1-col'}`}>
                 {question.options.map((option) => {
-                    const isSelected = selectedOptions.includes(option);
+                    const isSelected = selectedOptions && selectedOptions.includes(option);
                     return (
                         <button 
                             key={option} 
                             className={`option-btn ${isSelected ? 'selected' : ''}`}
-                            onClick={() => onToggle(question.id, option, isMultiple)}
+                            onClick={() => onToggle(activeId, option, isMultiple)}
                         >
                             <div className={`custom-checkbox ${isSelected ? 'checked' : ''}`}></div>
                             <span className="option-text">{option}</span>
