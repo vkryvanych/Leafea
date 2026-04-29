@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private final String jwtSecret = "leafea_super_secret_key_for_viktoria_project_2026";
-    private final int jwtExpirationMs = 86400000; // Токен діє 24 години
+    private final long jwtExpirationMs = 604800000L; // Токен діє 7 днів
 
     private final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 

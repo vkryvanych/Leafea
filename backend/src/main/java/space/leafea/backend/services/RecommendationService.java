@@ -5,8 +5,11 @@ import space.leafea.backend.dto.TestRequest;
 import space.leafea.backend.models.RecommendationItem;
 import space.leafea.backend.repositories.RecommendationItemRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService {
@@ -17,21 +20,18 @@ public class RecommendationService {
         this.repository = repository;
     }
 
-    public RecommendationItem findBestMatch(TestRequest request) {
+    public List<RecommendationItem> findBestMatches(TestRequest request) {
         List<RecommendationItem> allItems = repository.findByCategory(request.getCategory());
 
         if (allItems == null || allItems.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
-        RecommendationItem bestMatch = null;
-        int highestScore = 0;
-
+        Map<RecommendationItem, Integer> scores = new HashMap<>();
         Map<String, List<String>> userAnswers = request.getAnswers();
 
         List<String> wantedGenres = userAnswers.get("genres");
         String wantedMood = getSingleAnswer(userAnswers, "mood");
-
         String wantedDuration = getSingleAnswer(userAnswers, "duration");
         if (wantedDuration == null)
             wantedDuration = getSingleAnswer(userAnswers, "format");
@@ -58,7 +58,6 @@ public class RecommendationService {
 
             if (wantedGenres != null && !wantedGenres.isEmpty()) {
                 boolean hasMatchingGenre = false;
-
                 if (item.getGenres() != null) {
                     for (String wGenre : wantedGenres) {
                         if (item.getGenres().contains(wGenre)) {
@@ -67,7 +66,6 @@ public class RecommendationService {
                         }
                     }
                 }
-
                 if (!hasMatchingGenre) {
                     continue;
                 }
@@ -81,16 +79,12 @@ public class RecommendationService {
                         currentScore += 5;
                 }
             }
-
             if (wantedMood != null && wantedMood.equals(item.getMood()))
                 currentScore += 10;
-
             if (wantedDuration != null && wantedDuration.equals(item.getDuration()))
                 currentScore += 5;
-
             if (wantedAge != null && wantedAge.equals(item.getAge()))
                 currentScore += 3;
-
             if (wantedOccasion != null && wantedOccasion.equals(item.getOccasion()))
                 currentScore += 3;
             if (wantedViewingStyle != null && wantedViewingStyle.equals(item.getViewingStyle()))
@@ -101,7 +95,6 @@ public class RecommendationService {
                 currentScore += 3;
             if (wantedRegion != null && wantedRegion.equals(item.getRegion()))
                 currentScore += 3;
-
             if (wantedPreferences != null && item.getPreferences() != null) {
                 for (String pref : wantedPreferences) {
                     if (item.getPreferences().contains(pref))
@@ -109,13 +102,16 @@ public class RecommendationService {
                 }
             }
 
-            if (currentScore > highestScore) {
-                highestScore = currentScore;
-                bestMatch = item;
+            if (currentScore > 0) {
+                scores.put(item, currentScore);
             }
         }
 
-        return bestMatch;
+        return scores.entrySet().stream()
+                .sorted((a, b) -> b.getValue().compareTo(a.getValue())) 
+                .map(Map.Entry::getKey)
+                .limit(5) 
+                .collect(Collectors.toList());
     }
 
     private String getSingleAnswer(Map<String, List<String>> answers, String key) {

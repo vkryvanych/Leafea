@@ -9,14 +9,19 @@ interface Props {
     onRestart: () => void; 
     onAnotherOption: () => void;
     onSave: () => void; 
+    isAlreadySaved: boolean; 
 }
 
-export default function RecommendationCard({ data, onRestart, onAnotherOption, onSave }: Props) {
+export default function RecommendationCard({ data, onRestart, onAnotherOption, onSave, isAlreadySaved }: Props) {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(isAlreadySaved);
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setIsSaved(isAlreadySaved);
+    }, [data.title, isAlreadySaved]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -28,13 +33,9 @@ export default function RecommendationCard({ data, onRestart, onAnotherOption, o
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    useEffect(() => {
-        setIsSaved(false);
-    }, [data.title]);
-
     const handleSaveClick = () => {
         if (isSaved) {
-            navigate('/cabinet');
+            navigate('/cabinet', { state: { targetCardTitle: data.title } });
         } else {
             onSave();
             setIsSaved(true); 

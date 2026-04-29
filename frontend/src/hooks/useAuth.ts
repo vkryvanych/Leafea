@@ -1,13 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { SyntheticEvent } from 'react';
+
+
+const isTokenValid = (token: string | null) => {
+    if (!token) return false;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        return payload.exp > currentTime;
+    } catch (e) {
+        return false;
+    }
+};
 
 export const useAuth = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    
+    const token = localStorage.getItem('token');
+    const isValid = isTokenValid(token);
+
+
+    if (token && !isValid) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
+    }
+
+    const isLoggedIn = isValid;
+
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    navigate('/auth/login');
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
+    }, [navigate]);
+
     const login = async (e: SyntheticEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -20,8 +64,8 @@ export const useAuth = () => {
         try {
             const response = await axios.post('http://localhost:8080/api/auth/login', loginData);
             
-            const token = response.data.token;
-            localStorage.setItem('token', token);
+            const newToken = response.data.token;
+            localStorage.setItem('token', newToken);
             localStorage.setItem('userName', response.data.name);
             localStorage.setItem('isLoggedIn', 'true'); 
             
@@ -31,7 +75,7 @@ export const useAuth = () => {
                     const pendingCard = JSON.parse(pendingCardString);
                     
                     await axios.post('http://localhost:8080/api/cabinet', pendingCard, {
-                        headers: { Authorization: `Bearer ${token}` }
+                        headers: { Authorization: `Bearer ${newToken}` }
                     });
                     
                     localStorage.removeItem('pendingRecommendation');
@@ -64,7 +108,6 @@ export const useAuth = () => {
 
         try {
             await axios.post('http://localhost:8080/api/auth/register', registerData);
-            
             navigate('/auth/login'); 
         } catch (err: any) {
             if (err.response && err.response.status === 400) {
@@ -85,8 +128,6 @@ export const useAuth = () => {
         
         navigate('/'); 
     };
-
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
     return { login, register, logout, isLoading, error, isLoggedIn };
 };

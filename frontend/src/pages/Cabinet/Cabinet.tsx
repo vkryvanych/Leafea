@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'; 
-import { useLocation } from 'react-router-dom'; 
+import { useState, useEffect, useRef } from 'react'; 
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import { useCabinetData } from '../../hooks/useCabinetData';
 import CabinetHeader from '../../components/CabinetHeader/CabinetHeader';
@@ -19,6 +19,9 @@ import './Cabinet.css';
 function Cabinet() {
     const { userData, loading, localItems, setLocalItems } = useCabinetData();
     const location = useLocation(); 
+    const navigate = useNavigate(); 
+    const hasScrolledRef = useRef(false); 
+
     const [activeTab, setActiveTab] = useState('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -37,11 +40,44 @@ function Cabinet() {
     });
 
     useEffect(() => {
-        if (location.state && (location.state as any).activeTab) {
-            setActiveTab((location.state as any).activeTab);
-            window.history.replaceState({}, document.title);
+        hasScrolledRef.current = false;
+    }, [location.key]);
+
+    useEffect(() => {
+        if (!location.state) return;
+        const state = location.state as any;
+
+        if (state.targetCardTitle && localItems.length > 0 && !hasScrolledRef.current) {
+            const targetItem = localItems.find(item => item.title === state.targetCardTitle);
+
+            if (targetItem) {
+                hasScrolledRef.current = true;
+
+                let correctTab = 'all';
+                if (targetItem.status === 'inProgress') correctTab = 'inProgress';
+                if (targetItem.status === 'watched') correctTab = 'watched';
+
+                setActiveTab(correctTab);
+
+                setTimeout(() => {
+                    const element = document.getElementById(`card-${state.targetCardTitle}`);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        element.classList.add('highlight-card');
+                        setTimeout(() => element.classList.remove('highlight-card'), 2000);
+                      
+                        navigate(location.pathname, { replace: true, state: { activeTab: correctTab } });
+                    }
+                }, 300);
+            }
+        } 
+
+        else if (state.activeTab && !state.targetCardTitle) {
+            setActiveTab(state.activeTab);
+            navigate(location.pathname, { replace: true, state: {} });
         }
-    }, [location]);
+    }, [location.state, localItems, location.pathname, navigate]);
 
     useEffect(() => {
         if (activeTab !== 'quotes') {
@@ -309,10 +345,12 @@ function Cabinet() {
                                     {localItems
                                         .filter(item => item.status === 'planned')
                                         .map((item: any) => (
-                                        <CabinetCard 
-                                            key={item.id} id={item.id} title={item.title} description={item.description || item.genres || 'Немає опису'} 
-                                            image={item.image} category={item.category} onDelete={handleDeleteItem} onStart={handleStartItem} 
-                                        />
+                                        <div id={`card-${item.title}`} key={item.id}>
+                                            <CabinetCard 
+                                                id={item.id} title={item.title} description={item.description || item.genres || 'Немає опису'} 
+                                                image={item.image} category={item.category} onDelete={handleDeleteItem} onStart={handleStartItem} 
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             </div>
@@ -328,14 +366,16 @@ function Cabinet() {
                                 .filter(item => item.status === 'inProgress')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
                                 .map((item: any) => (
-                                    <InProgressCard 
-                                        key={item.id} id={item.id} title={item.title} image={item.image}
-                                        category={item.category} creator={item.creator} genres={item.genres}
-                                        startDate={item.startDate} totalAmount={item.totalAmount} currentProgress={item.currentProgress || 0}
-                                        onDelete={handleDeleteItem} onUpdateProgress={handleUpdateProgress} 
-                                        onMarkAsWatched={handleMarkAsWatched} 
-                                        onOpenAddQuote={handleOpenQuoteModal} 
-                                    />
+                                    <div id={`card-${item.title}`} key={item.id}>
+                                        <InProgressCard 
+                                            id={item.id} title={item.title} image={item.image}
+                                            category={item.category} creator={item.creator} genres={item.genres}
+                                            startDate={item.startDate} totalAmount={item.totalAmount} currentProgress={item.currentProgress || 0}
+                                            onDelete={handleDeleteItem} onUpdateProgress={handleUpdateProgress} 
+                                            onMarkAsWatched={handleMarkAsWatched} 
+                                            onOpenAddQuote={handleOpenQuoteModal} 
+                                        />
+                                    </div>
                             ))}
                             {localItems.filter(item => item.status === 'inProgress').length === 0 && (
                                 <div className="placeholder-tab">У тебе поки немає рекомендацій "В процесі"</div>
@@ -352,12 +392,14 @@ function Cabinet() {
                                 .filter(item => item.status === 'watched')
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
                                 .map((item: any) => (
-                                    <WatchedCard 
-                                        key={item.id} id={item.id} title={item.title} image={item.image}
-                                        category={item.category} rating={item.rating || ''} review={item.review || ''}
-                                        onDelete={handleDeleteItem} onUpdateDetails={handleUpdateWatchedDetails} 
-                                        onViewQuotes={handleViewSpecificQuotes} 
-                                    />
+                                    <div id={`card-${item.title}`} key={item.id}>
+                                        <WatchedCard 
+                                            id={item.id} title={item.title} image={item.image}
+                                            category={item.category} rating={item.rating || ''} review={item.review || ''}
+                                            onDelete={handleDeleteItem} onUpdateDetails={handleUpdateWatchedDetails} 
+                                            onViewQuotes={handleViewSpecificQuotes} 
+                                        />
+                                    </div>
                             ))}
                             {localItems.filter(item => item.status === 'watched').length === 0 && (
                                 <div className="placeholder-tab">Ти ще не маєш переглянутого/прочитаного контенту</div>

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import space.leafea.backend.dto.TestRequest;
 import space.leafea.backend.models.RecommendationItem;
 import space.leafea.backend.services.RecommendationService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/test")
@@ -18,13 +19,14 @@ public class TestController {
     }
 
     @PostMapping("/match")
-    public ResponseEntity<RecommendationItem> getRecommendationMatch(@RequestBody TestRequest request) {
-        RecommendationItem bestMatch = recommendationService.findBestMatch(request);
+    public ResponseEntity<?> getRecommendationMatch(@RequestBody TestRequest request) {
 
-        if (bestMatch == null) {
+        List<RecommendationItem> matches = recommendationService.findBestMatches(request);
+
+        if (matches == null || matches.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(bestMatch);
+        return ResponseEntity.ok(matches);
     }
 }

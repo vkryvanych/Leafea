@@ -14,7 +14,9 @@ export default function Test() {
         category, currentStep, answers, isLoading, isFinished, 
         recommendation, noMatch, 
         questions, isFetchingQuestions, 
-        startTest, toggleAnswer, nextStep, prevStep, finishTest, resetTest 
+        startTest, toggleAnswer, nextStep, prevStep, finishTest, resetTest,
+        nextRecommendation, 
+        savedKeys, markAsSavedLocally 
     } = useTestLogic();
 
     return (
@@ -42,6 +44,9 @@ export default function Test() {
                     prevStep={prevStep} 
                     finishTest={finishTest}
                     resetTest={resetTest} 
+                    nextRecommendation={nextRecommendation}
+                    savedKeys={savedKeys} 
+                    markAsSavedLocally={markAsSavedLocally} 
                 />
             )}
         </div>
@@ -51,21 +56,25 @@ export default function Test() {
 function TestFlow({ 
     category, currentStep, answers, isLoading, isFinished, 
     recommendation, noMatch, questions, 
-    toggleAnswer, nextStep, prevStep, finishTest, resetTest 
+    toggleAnswer, nextStep, prevStep, finishTest, resetTest,
+    nextRecommendation,
+    savedKeys, markAsSavedLocally 
 }: any) {
     if (!questions || questions.length === 0) {
         return null;
     }
 
     const currentQuestion = questions[currentStep];
-
     const [noMoreOptions, setNoMoreOptions] = useState(false);
     
     const navigate = useNavigate();
     const API_URL = 'http://localhost:8080/api/cabinet';
 
     const handleAnotherOption = () => {
-        setNoMoreOptions(true);
+        const hasMore = nextRecommendation();
+        if (!hasMore) {
+            setNoMoreOptions(true);
+        }
     };
 
     const handleSaveToCabinet = async (data: any) => {
@@ -165,7 +174,11 @@ function TestFlow({
                     data={recommendation} 
                     onRestart={handleReset} 
                     onAnotherOption={handleAnotherOption} 
-                    onSave={() => handleSaveToCabinet(recommendation)} 
+                    onSave={() => {
+                        handleSaveToCabinet(recommendation);
+                        markAsSavedLocally(recommendation.title, recommendation.category); 
+                    }} 
+                    isAlreadySaved={savedKeys.includes(`${recommendation.title}-${recommendation.category}`)} 
                 />
             </div>
         );

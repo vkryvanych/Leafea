@@ -16,11 +16,13 @@ export function useTestLogic() {
     const [isLoading, setIsLoading] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
     
+    const [recommendationsList, setRecommendationsList] = useState<any[]>([]);
+    const [currentRecIndex, setCurrentRecIndex] = useState(0);
     const [recommendation, setRecommendation] = useState<any>(null);
     const [noMatch, setNoMatch] = useState(false);
-
     const [questions, setQuestions] = useState<BackendQuestion[]>([]);
     const [isFetchingQuestions, setIsFetchingQuestions] = useState(false);
+    const [savedKeys, setSavedKeys] = useState<string[]>([]);
 
     const startTest = async (selectedCategory: string) => {
         setCategory(selectedCategory);
@@ -29,13 +31,15 @@ export function useTestLogic() {
         setIsLoading(false);
         setIsFinished(false);
         setRecommendation(null);
+        setRecommendationsList([]);
+        setCurrentRecIndex(0);
         setNoMatch(false);
+        setSavedKeys([]);
 
         setIsFetchingQuestions(true);
         try {
             const token = localStorage.getItem('token');
             const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-
             const response = await axios.get(`http://localhost:8080/api/test-questions/${selectedCategory}`, config);
             setQuestions(response.data);
         } catch (error) {
@@ -48,15 +52,10 @@ export function useTestLogic() {
     const toggleAnswer = (questionId: string, option: string, isMultiple: boolean) => {
         setAnswers(prev => {
             const currentAnswers = prev[questionId] || [];
-           
             if (!isMultiple) {
-                if (currentAnswers.includes(option)) {
-                    return { ...prev, [questionId]: [] };
-                } else {
-                    return { ...prev, [questionId]: [option] };
-                }
+                if (currentAnswers.includes(option)) return { ...prev, [questionId]: [] };
+                return { ...prev, [questionId]: [option] };
             }
-            
             if (currentAnswers.includes(option)) {
                 return { ...prev, [questionId]: currentAnswers.filter(ans => ans !== option) };
             } else {
@@ -81,7 +80,24 @@ export function useTestLogic() {
                 answers: answers
             }, config);
             
-            setRecommendation(response.data);
+            if (token) {
+                try {
+                    const cabinetRes = await axios.get('http://localhost:8080/api/cabinet', config);
+                    const keys = cabinetRes.data.map((item: any) => `${item.title}-${item.category}`);
+                    setSavedKeys(keys);
+                } catch (err) {
+                    console.error("Помилка перевірки кабінету:", err);
+                }
+            }
+
+            const results = response.data;
+            if (results && results.length > 0) {
+                setRecommendationsList(results);
+                setRecommendation(results[0]); 
+                setCurrentRecIndex(0);
+            } else {
+                setNoMatch(true);
+            }
             setIsFinished(true);
         } catch (error: any) {
             console.error("Помилка алгоритму:", error);
@@ -94,21 +110,36 @@ export function useTestLogic() {
         }
     };
 
+    const nextRecommendation = () => {
+        const nextIndex = currentRecIndex + 1;
+        if (nextIndex < recommendationsList.length) {
+            setIsLoading(true);
+            setTimeout(() => {
+                setCurrentRecIndex(nextIndex);
+                setRecommendation(recommendationsList[nextIndex]);
+                setIsLoading(false);
+            }, 1000); 
+            return true; 
+        }
+        return false; 
+    };
+
     const resetTest = () => { 
-        setCategory(null); 
-        setCurrentStep(0); 
-        setAnswers({}); 
-        setIsLoading(false);
-        setIsFinished(false);
-        setRecommendation(null);
-        setNoMatch(false);
-        setQuestions([]); 
+        setCategory(null); setCurrentStep(0); setAnswers({}); 
+        setIsLoading(false); setIsFinished(false); setRecommendation(null);
+        setRecommendationsList([]); setCurrentRecIndex(0); setNoMatch(false);
+        setQuestions([]); setSavedKeys([]); 
+    };
+
+    const markAsSavedLocally = (title: string, itemCategory: string) => {
+        setSavedKeys(prev => [...prev, `${title}-${itemCategory}`]);
     };
 
     return { 
         category, currentStep, answers, isLoading, isFinished, 
-        recommendation, noMatch, 
-        questions, isFetchingQuestions, 
-        startTest, toggleAnswer, nextStep, prevStep, finishTest, resetTest 
+        recommendation, noMatch, questions, isFetchingQuestions, 
+        startTest, toggleAnswer, nextStep, prevStep, finishTest, resetTest,
+        nextRecommendation, 
+        savedKeys, markAsSavedLocally 
     };
 }
