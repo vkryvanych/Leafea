@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { SyntheticEvent } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const getBaseUrl = () => {
+    if (import.meta.env.DEV) {
+        return 'http://localhost:8080';
+    }
+    return import.meta.env.VITE_API_BASE_URL || 'https://leafea-backend.onrender.com';
+};
+const API_BASE_URL = getBaseUrl();
 
 const isTokenValid = (token: string | null) => {
     if (!token) return false;

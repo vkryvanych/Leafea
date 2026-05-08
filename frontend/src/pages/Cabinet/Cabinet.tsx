@@ -34,7 +34,15 @@ function Cabinet() {
     const [editingQuote, setEditingQuote] = useState<{itemId: string | number, quoteId: string, text: string} | null>(null);
     const [quoteFilterItemId, setQuoteFilterItemId] = useState<string | number | null>(null);
 
-    const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/cabinet`;
+    const getBaseUrl = () => {
+        if (import.meta.env.DEV) {
+            return 'http://localhost:8080';
+        }
+        return import.meta.env.VITE_API_BASE_URL || 'https://leafea-backend.onrender.com';
+    };
+
+    const API_URL = `${getBaseUrl()}/api/cabinet`;
+
     const getConfig = () => ({
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });

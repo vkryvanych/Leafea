@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import girl2_ava from '../assets/girl2_ava.jpg'; 
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const getBaseUrl = () => {
+    if (import.meta.env.DEV) {
+        return 'http://localhost:8080';
+    }
+    return import.meta.env.VITE_API_BASE_URL || 'https://leafea-backend.onrender.com';
+};
+const API_BASE_URL = getBaseUrl();
 
 export const useCabinetData = () => {
     const [userData, setUserData] = useState<any>(null);
