@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { SyntheticEvent } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 const isTokenValid = (token: string | null) => {
     if (!token) return false;
@@ -21,7 +22,6 @@ export const useAuth = () => {
     const [error, setError] = useState<string | null>(null);
     const token = localStorage.getItem('token');
     const isValid = isTokenValid(token);
-
 
     if (token && !isValid) {
         localStorage.removeItem('token');
@@ -62,7 +62,7 @@ export const useAuth = () => {
         const loginData = Object.fromEntries(formData);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', loginData);
+            const response = await axios.post(`${API_BASE_URL}/api/auth/login`, loginData);
             
             const newToken = response.data.token;
             localStorage.setItem('token', newToken);
@@ -74,7 +74,7 @@ export const useAuth = () => {
                 try {
                     const pendingCard = JSON.parse(pendingCardString);
                     
-                    await axios.post('http://localhost:8080/api/cabinet', pendingCard, {
+                    await axios.post(`${API_BASE_URL}/api/cabinet`, pendingCard, {
                         headers: { Authorization: `Bearer ${newToken}` }
                     });
                     
@@ -106,12 +106,19 @@ export const useAuth = () => {
         const formData = new FormData(form);
         const registerData = Object.fromEntries(formData);
 
+        const password = registerData.password as string;
+        if (!password || password.length < 6) {
+            setError('Пароль має містити щонайменше 6 символів!');
+            setIsLoading(false);
+            return;
+        }
+
         try {
-            await axios.post('http://localhost:8080/api/auth/register', registerData);
+            await axios.post(`${API_BASE_URL}/api/auth/register`, registerData);
             navigate('/auth/login'); 
         } catch (err: any) {
             if (err.response && err.response.status === 400) {
-                setError('Такий емайл вже використовується!');
+                setError(typeof err.response.data === 'string' ? err.response.data : 'Помилка валідації даних!');
             } else {
                 setError('Сталася помилка при реєстрації. Спробуйте пізніше.');
             }

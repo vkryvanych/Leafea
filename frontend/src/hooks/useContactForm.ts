@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 export const useContactForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -21,7 +23,7 @@ export const useContactForm = () => {
         };
 
         try {
-            await axios.post('http://localhost:8080/api/contact/send', contactData);
+            await axios.post(`${API_BASE_URL}/api/contact/send`, contactData);
 
             setIsSuccess(true);
             e.currentTarget.reset(); 

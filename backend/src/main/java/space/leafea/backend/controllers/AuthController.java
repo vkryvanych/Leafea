@@ -27,6 +27,11 @@ public class AuthController {
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body("Цей емейл вже зайнятий!");
         }
+
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            return ResponseEntity.badRequest().body("Пароль має містити щонайменше 6 символів!");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok("Користувача зареєстровано успішно!");

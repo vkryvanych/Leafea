@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import girl2_ava from '../assets/girl2_ava.jpg'; 
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 export const useCabinetData = () => {
     const [userData, setUserData] = useState<any>(null);
     const [localItems, setLocalItems] = useState<any[]>([]);
@@ -20,7 +22,7 @@ export const useCabinetData = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:8080/api/cabinet', {
+                const response = await axios.get(`${API_BASE_URL}/api/cabinet`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

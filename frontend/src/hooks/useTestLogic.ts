@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 export type BackendQuestion = {
     questionId: string;
     title: string;
@@ -40,7 +42,7 @@ export function useTestLogic() {
         try {
             const token = localStorage.getItem('token');
             const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-            const response = await axios.get(`http://localhost:8080/api/test-questions/${selectedCategory}`, config);
+            const response = await axios.get(`${API_BASE_URL}/api/test-questions/${selectedCategory}`, config);
             setQuestions(response.data);
         } catch (error) {
             console.error("Помилка завантаження питань:", error);
@@ -75,14 +77,14 @@ export function useTestLogic() {
             const token = localStorage.getItem('token');
             const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
-            const response = await axios.post('http://localhost:8080/api/test/match', {
+            const response = await axios.post(`${API_BASE_URL}/api/test/match`, {
                 category: category,
                 answers: answers
             }, config);
             
             if (token) {
                 try {
-                    const cabinetRes = await axios.get('http://localhost:8080/api/cabinet', config);
+                    const cabinetRes = await axios.get(`${API_BASE_URL}/api/cabinet`, config);
                     const keys = cabinetRes.data.map((item: any) => `${item.title}-${item.category}`);
                     setSavedKeys(keys);
                 } catch (err) {
