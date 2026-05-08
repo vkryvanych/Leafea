@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# Файл з паролями від бази даних
-src/main/resources/application.properties
